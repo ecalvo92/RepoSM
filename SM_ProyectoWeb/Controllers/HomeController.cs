@@ -18,5 +18,10 @@ namespace SM_ProyectoWeb.Controllers
             return View();
         }
 
+        public IActionResult Registro()
+        {
+            return View(); 
+        }
+
     }
 }
