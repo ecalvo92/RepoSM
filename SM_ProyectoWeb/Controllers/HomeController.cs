@@ -23,5 +23,10 @@ namespace SM_ProyectoWeb.Controllers
             return View(); 
         }
 
+        public IActionResult Principal()
+        {
+            return View();
+        }
+
     }
 }
