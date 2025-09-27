@@ -1,6 +1,4 @@
-using System.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
-using SM_ProyectoWeb.Models;
 
 namespace SM_ProyectoWeb.Controllers
 {
@@ -20,7 +18,7 @@ namespace SM_ProyectoWeb.Controllers
 
         public IActionResult Registro()
         {
-            return View(); 
+            return View();
         }
 
         public IActionResult RecuperarAcceso()
