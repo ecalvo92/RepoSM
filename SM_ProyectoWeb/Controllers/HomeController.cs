@@ -36,12 +36,24 @@ namespace SM_ProyectoWeb.Controllers
             return View();
         }
 
+        [HttpPost]
+        public IActionResult Registro(UsuarioModel usuario)
+        {
+            return View();
+        }
+
         #endregion
 
         #region Recuperar Acceso
 
         [HttpGet]
         public IActionResult RecuperarAcceso()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        public IActionResult RecuperarAcceso(UsuarioModel usuario)
         {
             return View();
         }

@@ -1,4 +1,6 @@
-﻿@{
+﻿@model UsuarioModel
+
+@{
     Layout = "_LayoutExterno";
 }
 
@@ -13,31 +15,31 @@
                     </a>
                 </div>
 
-                <form id="formAuthentication" class="mb-3" action="index.html" method="POST">
+                <form class="mb-3" asp-action="Registro" asp-controller="Home">
                     <div class="mb-3">
                         <label for="username" class="form-label">Identificación</label>
-                        <input type="text" class="form-control" />
+                        <input type="text" class="form-control" asp-for="Identificacion" />
                     </div>
 
                     <div class="mb-3">
                         <label for="username" class="form-label">Nombre</label>
-                        <input type="text" class="form-control" />
+                        <input type="text" class="form-control" asp-for="Nombre" />
                     </div>
 
                     <div class="mb-3">
                         <label for="email" class="form-label">Correo Electrónico</label>
-                        <input type="email" class="form-control" />
+                        <input type="email" class="form-control" asp-for="CorreoElectronico" />
                     </div>
 
                     <div class="mb-3 form-password-toggle">
                         <label class="form-label" for="password">Contraseña</label>
                         <div class="input-group input-group-merge">
-                            <input type="password" class="form-control" />
+                            <input type="password" class="form-control" asp-for="Contrasenna" />
                             <span class="input-group-text cursor-pointer"><i class="bx bx-hide"></i></span>
                         </div>
                     </div>
 
-                    <button class="btn btn-primary d-grid w-100">Procesar</button>
+                    <button class="btn btn-primary d-grid w-100" type="submit">Procesar</button>
                 </form>
 
                 <p class="text-center">
