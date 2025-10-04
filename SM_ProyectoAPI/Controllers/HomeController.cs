@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using SM_ProyectoAPI.Models;
 
 namespace SM_ProyectoAPI.Controllers
 {
@@ -6,9 +7,9 @@ namespace SM_ProyectoAPI.Controllers
     [ApiController]
     public class HomeController : ControllerBase
     {
-        [HttpPost]
-        [Route("IniciarSesion")]
-        public IActionResult IniciarSesion()
+        [HttpPut]
+        [Route("Registro")]
+        public IActionResult Registro(UsuarioModel usuario)
         {
             return Ok();
         }

@@ -5,11 +5,10 @@ namespace SM_ProyectoWeb.Controllers
 {
     public class HomeController : Controller
     {
-        private readonly ILogger<HomeController> _logger;
-
-        public HomeController(ILogger<HomeController> logger)
+        private readonly IHttpClientFactory _factory;
+        public HomeController(IHttpClientFactory factory)
         {
-            _logger = logger;
+            _factory = factory;
         }
 
         #region Iniciar Sesión
@@ -39,6 +38,17 @@ namespace SM_ProyectoWeb.Controllers
         [HttpPost]
         public IActionResult Registro(UsuarioModel usuario)
         {
+            using (var context = _factory.CreateClient())
+            {
+                var urlApi = "https://localhost:7149/api/Home/Registro";
+                var resultado = context.PutAsJsonAsync(urlApi, usuario).Result;
+
+                if (resultado.IsSuccessStatusCode)
+                { 
+                
+                }
+            }
+
             return View();
         }
 
