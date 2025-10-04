@@ -18,12 +18,12 @@
                 <form id="FormRegistro" class="mb-3" asp-action="Registro" asp-controller="Home">
                     <div class="mb-3">
                         <label for="Identificacion" class="form-label">Identificación</label>
-                        <input type="text" class="form-control" asp-for="Identificacion" />
+                        <input type="text" class="form-control" asp-for="Identificacion" onkeyup="ConsultarNombre();" />
                     </div>
 
                     <div class="mb-3">
                         <label for="Nombre" class="form-label">Nombre</label>
-                        <input type="text" class="form-control" asp-for="Nombre" />
+                        <input type="text" class="form-control" asp-for="Nombre" readonly="readonly" />
                     </div>
 
                     <div class="mb-3">
