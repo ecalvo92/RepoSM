@@ -5,9 +5,11 @@ namespace SM_ProyectoWeb.Controllers
 {
     public class HomeController : Controller
     {
+        private readonly IConfiguration _configuration;
         private readonly IHttpClientFactory _factory;
-        public HomeController(IHttpClientFactory factory)
+        public HomeController(IConfiguration configuration, IHttpClientFactory factory)
         {
+            _configuration = configuration;
             _factory = factory;
         }
 
@@ -40,8 +42,8 @@ namespace SM_ProyectoWeb.Controllers
         {
             using (var context = _factory.CreateClient())
             {
-                var urlApi = "https://localhost:7149/api/Home/Registro";
-                var resultado = context.PutAsJsonAsync(urlApi, usuario).Result;
+                var urlApi = _configuration["Valores:UrlAPI"] + "Home/Registro";
+                var resultado = context.PostAsJsonAsync(urlApi, usuario).Result;
 
                 if (resultado.IsSuccessStatusCode)
                 { 

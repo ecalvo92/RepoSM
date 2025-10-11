@@ -9,11 +9,17 @@ namespace SM_ProyectoAPI.Controllers
     [ApiController]
     public class HomeController : ControllerBase
     {
-        [HttpPut]
+        private readonly IConfiguration _configuration;
+        public HomeController(IConfiguration configuration)
+        {
+            _configuration = configuration;
+        }
+
+        [HttpPost]
         [Route("Registro")]
         public IActionResult Registro(UsuarioModel usuario)
         {
-            using (var context = new SqlConnection("Server=localhost; Database=BD_SM; Integrated Security=True; TrustServerCertificate=True;"))
+            using (var context = new SqlConnection(_configuration["ConnectionStrings:BDConnection"]))
             {
                 var parametros = new DynamicParameters();
                 parametros.Add("@Identificacion", usuario.Identificacion);
