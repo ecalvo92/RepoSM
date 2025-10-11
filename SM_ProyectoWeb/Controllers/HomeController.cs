@@ -46,12 +46,16 @@ namespace SM_ProyectoWeb.Controllers
                 var resultado = context.PostAsJsonAsync(urlApi, usuario).Result;
 
                 if (resultado.IsSuccessStatusCode)
-                { 
-                
-                }
-            }
+                {
+                    var datosApi = resultado.Content.ReadFromJsonAsync<int>().Result;
 
-            return View();
+                    if (datosApi > 0)
+                        return RedirectToAction("Index","Home");
+                }
+
+                ViewBag.Mensaje = "No se ha registrado la información";
+                return View();
+            }
         }
 
         #endregion
