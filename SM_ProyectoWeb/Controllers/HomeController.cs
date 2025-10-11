@@ -24,7 +24,22 @@ namespace SM_ProyectoWeb.Controllers
         [HttpPost]
         public IActionResult Index(UsuarioModel usuario)
         {
-            return View();
+            using (var context = _factory.CreateClient())
+            {
+                var urlApi = _configuration["Valores:UrlAPI"] + "Home/IniciarSesion";
+                var resultado = context.PostAsJsonAsync(urlApi, usuario).Result;
+
+                if (resultado.IsSuccessStatusCode)
+                {
+                    var datosApi = resultado.Content.ReadFromJsonAsync<UsuarioModel>().Result;
+
+                    if (datosApi != null)
+                        return RedirectToAction("Principal", "Home");
+                }
+
+                ViewBag.Mensaje = "No se ha validado la información";
+                return View();
+            }
         }
 
         #endregion

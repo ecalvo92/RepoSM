@@ -1,6 +1,6 @@
-﻿namespace SM_ProyectoWeb.Models
+﻿namespace SM_ProyectoAPI.Models
 {
-    public class UsuarioModel
+    public class ValidarSesionResponse
     {
         public int ConsecutivoUsuario { get; set; }
         public string Identificacion { get; set; } = string.Empty;

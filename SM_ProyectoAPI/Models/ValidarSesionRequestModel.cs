@@ -2,12 +2,8 @@
 
 namespace SM_ProyectoAPI.Models
 {
-    public class UsuarioModel
+    public class ValidarSesionRequestModel
     {
-        [Required]
-        public string Identificacion { get; set; } = string.Empty;
-        [Required]
-        public string Nombre { get; set; } = string.Empty;
         [Required]
         public string CorreoElectronico { get; set; } = string.Empty;
         [Required]
