@@ -45,6 +45,8 @@ SET IDENTITY_INSERT [dbo].[tbUsuario] ON
 GO
 INSERT [dbo].[tbUsuario] ([ConsecutivoUsuario], [Identificacion], [Nombre], [CorreoElectronico], [Contrasenna], [Estado], [ConsecutivoPerfil]) VALUES (1, N'208690734', N'DIEGO ARMANDO PICADO MURILLO', N'dpicado90734@ufide.ac.cr', N'90734', 1, 2)
 GO
+INSERT [dbo].[tbUsuario] ([ConsecutivoUsuario], [Identificacion], [Nombre], [CorreoElectronico], [Contrasenna], [Estado], [ConsecutivoPerfil]) VALUES (2, N'304590415', N'EDUARDO JOSE CALVO CASTILLO', N'ecalvo90415@ufide.ac.cr', N'90415', 1, 2)
+GO
 SET IDENTITY_INSERT [dbo].[tbUsuario] OFF
 GO
 
@@ -74,6 +76,46 @@ BEGIN
         VALUES (@Identificacion,@Nombre,@CorreoElectronico,@Contrasenna,@Estado,@Perfil)
     
     END
+
+END
+GO
+
+CREATE PROCEDURE [dbo].[ValidarInicioSesion]
+    @CorreoElectronico VARCHAR(100),
+    @Contrasenna VARCHAR(10)
+AS
+BEGIN
+	
+    SELECT  ConsecutivoUsuario,
+            Identificacion,
+            Nombre,
+            CorreoElectronico,
+            Contrasenna,
+            Estado,
+            ConsecutivoPerfil
+      FROM  dbo.tbUsuario
+      WHERE CorreoElectronico = @CorreoElectronico
+        AND Contrasenna = @Contrasenna
+        AND Estado = 1
+
+END
+GO
+
+CREATE PROCEDURE [dbo].[ValidarUsuario]
+    @CorreoElectronico VARCHAR(100)
+AS
+BEGIN
+	
+    SELECT  ConsecutivoUsuario,
+            Identificacion,
+            Nombre,
+            CorreoElectronico,
+            Contrasenna,
+            Estado,
+            ConsecutivoPerfil
+      FROM  dbo.tbUsuario
+      WHERE CorreoElectronico = @CorreoElectronico
+        AND Estado = 1
 
 END
 GO

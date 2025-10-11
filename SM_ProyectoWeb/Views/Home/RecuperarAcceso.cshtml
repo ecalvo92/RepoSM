@@ -14,8 +14,15 @@
                         <span class="app-brand-text demo text-body fw-bolder">Recuperar Acceso</span>
                     </a>
                 </div>
+
+                @if (ViewBag.Mensaje != null)
+                {
+                    <div class="alert alert-primary text-center">
+                        @ViewBag.Mensaje
+                    </div>
+                }
                 
-                <form class="mb-3" asp-action="RecuperarAcceso" asp-controller="Home">
+                <form id="FormRecuperarAcceso" class="mb-3" asp-action="RecuperarAcceso" asp-controller="Home">
                     <div class="mb-3">
                         <label for="email" class="form-label">Correo Electrónico</label>
                         <input type="email" class="form-control" asp-for="CorreoElectronico" />
@@ -31,3 +38,5 @@
         </div>
     </div>
 </div>
+
+<script src="~/js/RecuperarAcceso.js" asp-append-version="true"></script>

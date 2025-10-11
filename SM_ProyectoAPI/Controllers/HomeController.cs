@@ -32,6 +32,7 @@ namespace SM_ProyectoAPI.Controllers
             }
         }
 
+
         [HttpPost]
         [Route("IniciarSesion")]
         public IActionResult IniciarSesion(ValidarSesionRequestModel usuario)
@@ -46,6 +47,28 @@ namespace SM_ProyectoAPI.Controllers
 
                 if(resultado != null)
                     return Ok(resultado);
+
+                return NotFound();
+            }
+        }
+
+
+        [HttpGet]
+        [Route("RecuperarAcceso")]
+        public IActionResult RecuperarAcceso(string CorreoElectronico)
+        {
+            using (var context = new SqlConnection(_configuration["ConnectionStrings:BDConnection"]))
+            {
+                var parametros = new DynamicParameters();
+                parametros.Add("@CorreoElectronico", CorreoElectronico);
+
+                var resultado = context.QueryFirstOrDefault<ValidarSesionResponse>("ValidarUsuario", parametros);
+
+                if (resultado != null)
+                {
+                    //Tenemos que enviarle un correo al usuario con una nueva contraseña
+                    return Ok(resultado);
+                }
 
                 return NotFound();
             }

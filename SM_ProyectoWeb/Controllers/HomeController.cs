@@ -86,7 +86,22 @@ namespace SM_ProyectoWeb.Controllers
         [HttpPost]
         public IActionResult RecuperarAcceso(UsuarioModel usuario)
         {
-            return View();
+            using (var context = _factory.CreateClient())
+            {
+                var urlApi = _configuration["Valores:UrlAPI"] + "Home/RecuperarAcceso?CorreoElectronico=" + usuario.CorreoElectronico;
+                var resultado = context.GetAsync(urlApi).Result;
+
+                if (resultado.IsSuccessStatusCode)
+                {
+                    var datosApi = resultado.Content.ReadFromJsonAsync<UsuarioModel>().Result;
+
+                    if (datosApi != null)
+                        return RedirectToAction("Index", "Home");
+                }
+
+                ViewBag.Mensaje = "No se ha recuperado el acceso";
+                return View();
+            }
         }
 
         #endregion
