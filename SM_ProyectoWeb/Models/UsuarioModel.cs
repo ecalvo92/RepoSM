@@ -9,5 +9,6 @@
         public string Contrasenna { get; set; } = string.Empty;
         public bool Estado { get; set; }
         public int ConsecutivoPerfil { get; set; }
+        public string NombrePerfil { get; set; } = string.Empty;
     }
 }

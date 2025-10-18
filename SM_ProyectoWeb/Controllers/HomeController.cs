@@ -34,7 +34,12 @@ namespace SM_ProyectoWeb.Controllers
                     var datosApi = resultado.Content.ReadFromJsonAsync<UsuarioModel>().Result;
 
                     if (datosApi != null)
+                    {
+                        HttpContext.Session.SetString("NombreUsuario", datosApi.Nombre);
+                        HttpContext.Session.SetString("NombrePerfil", datosApi.NombrePerfil);
+
                         return RedirectToAction("Principal", "Home");
+                    }
                 }
 
                 ViewBag.Mensaje = "No se ha validado la información";
