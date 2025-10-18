@@ -111,6 +111,7 @@ namespace SM_ProyectoWeb.Controllers
 
         #endregion
 
+        [HttpGet]
         public IActionResult Principal()
         {
             return View();

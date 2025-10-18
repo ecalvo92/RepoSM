@@ -1,0 +1,11 @@
+﻿namespace SM_ProyectoWeb.Models
+{
+    public class ProductoModel
+    {
+        public int ConsecutivoProducto { get; set; }
+        public string Nombre { get; set; } = string.Empty;
+        public decimal Precio { get; set; }
+        public bool Estado { get; set; }
+        public string Imagen { get; set; } = string.Empty;
+    }
+}
