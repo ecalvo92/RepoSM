@@ -5,6 +5,14 @@
 }
 
 <div class="card mb-4 mt-4">
+
+    @if (ViewBag.Mensaje != null)
+    {
+        <div class="alert alert-primary text-center">
+            @ViewBag.Mensaje
+        </div>
+    }
+
     <h4 class="card-header text-center">Productos</h4>
     <div class="card-body">
         
