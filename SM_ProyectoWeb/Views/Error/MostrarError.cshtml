@@ -1,5 +1,12 @@
 ﻿@{
-    Layout = "_LayoutExterno";
+    @if (Context.Session.GetInt32("ConsecutivoUsuario") == null)
+    {
+        Layout = "_LayoutExterno";
+    }
+    else
+    {
+        Layout = "_LayoutInterno";
+    }    
 }
 
 <div class="container container-primary">
@@ -10,7 +17,15 @@
             <h3>Página no disponible</h3>
 
             <p>Lo sentimos, la página no se encuentra disponible en este momento.</p>
-            <a href="@Url.Action("Index", "Home")" class="btn btn-primary">INICIO</a>
+
+            @if (Context.Session.GetInt32("ConsecutivoUsuario") == null)
+            {
+                <a href="@Url.Action("Index", "Home")" class="btn btn-primary">INICIO</a>
+            }
+            else
+            {
+                <a href="@Url.Action("Principal", "Home")" class="btn btn-primary">INICIO</a>
+            }            
 
         </div>
     </div>
