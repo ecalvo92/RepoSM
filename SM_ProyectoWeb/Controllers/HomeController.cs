@@ -35,6 +35,7 @@ namespace SM_ProyectoWeb.Controllers
 
                     if (datosApi != null)
                     {
+                        HttpContext.Session.SetInt32("ConsecutivoUsuario", datosApi.ConsecutivoUsuario);
                         HttpContext.Session.SetString("NombreUsuario", datosApi.Nombre);
                         HttpContext.Session.SetString("NombrePerfil", datosApi.NombrePerfil);
 
@@ -111,6 +112,7 @@ namespace SM_ProyectoWeb.Controllers
 
         #endregion
 
+        [Seguridad]
         [HttpGet]
         public IActionResult Principal()
         {

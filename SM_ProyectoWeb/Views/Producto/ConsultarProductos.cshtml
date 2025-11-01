@@ -4,56 +4,36 @@
     Layout = "~/Views/Shared/_LayoutInterno.cshtml";
 }
 
-<h1>ConsultarProductos</h1>
+<div class="card mb-4 mt-4">
+    <h4 class="card-header text-center">Productos</h4>
+    <div class="card-body">
+        
+        <table class="table mb-4">
+            <thead>
+                <tr>
+                    <th>#</th>
+                    <th>Nombre</th>
+                    <th>Precio</th>
+                    <th>Estado</th>
+                    <th>Imagen</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model)
+                {
+                    <tr>
+                        <td>@item.ConsecutivoProducto</td>
+                        <td>@item.Nombre</td>
+                        <td>@item.Precio.ToString("N2")</td>
+                        <td>@(item.Estado ? "Activo" : "Inactivo")</td>
+                        <td>@item.Imagen</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
 
-<p>
-    <a asp-action="Create">Create New</a>
-</p>
-<table class="table">
-    <thead>
-        <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.ConsecutivoProducto)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Nombre)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Precio)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Estado)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Imagen)
-            </th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.ConsecutivoProducto)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Nombre)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Precio)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Estado)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Imagen)
-            </td>
-            <td>
-                @Html.ActionLink("Edit", "Edit", new { /* id=item.PrimaryKey */ }) |
-                @Html.ActionLink("Details", "Details", new { /* id=item.PrimaryKey */ }) |
-                @Html.ActionLink("Delete", "Delete", new { /* id=item.PrimaryKey */ })
-            </td>
-        </tr>
-}
-    </tbody>
-</table>
+    </div>
+</div>
+
+
+

@@ -20,7 +20,6 @@
     <link rel="stylesheet" href="~/lib/css/perfect-scrollbar.css" />
     <script src="~/lib/js/helpers.js"></script>
     <script src="~/lib/js/config.js"></script>
-    @* <script src="~/lib/js/jquery.js"></script> *@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <script src="https://cdn.jsdelivr.net/jquery.validation/1.16.0/jquery.validate.min.js"></script>
 </head>
@@ -44,32 +43,18 @@
                 <div class="menu-inner-shadow"></div>
 
                 <ul class="menu-inner py-1">
+
+                    <li class="menu-header small text-uppercase">
+                        <span class="menu-header-text">Mantenimientos</span>
+                    </li>
+
                     <li class="menu-item">
-                        <a href="index.html" class="menu-link">
+                        <a asp-action="ConsultarProductos" asp-controller="Producto" class="menu-link">
                             <i class="menu-icon tf-icons bx bx-home-circle"></i>
-                            <div data-i18n="Analytics">Dashboard</div>
+                            <div data-i18n="Analytics">Productos</div>
                         </a>
                     </li>
 
-                    <li class="menu-item active open">
-                        <a href="javascript:void(0);" class="menu-link menu-toggle">
-                            <i class="menu-icon tf-icons bx bx-layout"></i>
-                            <div data-i18n="Layouts">Layouts</div>
-                        </a>
-
-                        <ul class="menu-sub">
-                            <li class="menu-item">
-                                <a href="layouts-without-menu.html" class="menu-link">
-                                    <div data-i18n="Without menu">Without menu</div>
-                                </a>
-                            </li>
-                            <li class="menu-item">
-                                <a href="layouts-without-navbar.html" class="menu-link">
-                                    <div data-i18n="Without navbar">Without navbar</div>
-                                </a>
-                            </li>
-                        </ul>
-                    </li>
                 </ul>
             </aside>
             <div class="layout-page">

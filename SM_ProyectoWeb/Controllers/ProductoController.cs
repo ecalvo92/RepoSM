@@ -3,6 +3,7 @@ using SM_ProyectoWeb.Models;
 
 namespace SM_ProyectoWeb.Controllers
 {
+    [Seguridad]
     public class ProductoController : Controller
     {
         private readonly IConfiguration _configuration;
