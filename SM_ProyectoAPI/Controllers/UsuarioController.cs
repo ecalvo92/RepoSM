@@ -48,7 +48,22 @@ namespace SM_ProyectoAPI.Controllers
                 var resultado = context.Execute("ActualizarPerfil", parametros);
                 return Ok(resultado);
             }
-        }       
+        }
+
+        [HttpPut]
+        [Route("ActualizarSeguridad")]
+        public IActionResult ActualizarSeguridad(SeguridadRequestModel usuario)
+        {
+            using (var context = new SqlConnection(_configuration["ConnectionStrings:BDConnection"]))
+            {
+                var parametros = new DynamicParameters();
+                parametros.Add("@ConsecutivoUsuario", usuario.ConsecutivoUsuario);
+                parametros.Add("@Contrasenna", usuario.Contrasenna);
+
+                var resultado = context.Execute("ActualizarContrasenna", parametros);
+                return Ok(resultado);
+            }
+        }
 
     }
 }

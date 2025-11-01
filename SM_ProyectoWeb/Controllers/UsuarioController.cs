@@ -15,6 +15,8 @@ namespace SM_ProyectoWeb.Controllers
             _factory = factory;
         }
 
+        #region Perfil
+
         [HttpGet]
         public IActionResult InfoPerfil()
         {
@@ -63,5 +65,41 @@ namespace SM_ProyectoWeb.Controllers
                 return View();
             }
         }
+
+        #endregion
+
+        #region Seguridad
+
+        [HttpGet]
+        public IActionResult InfoSeguridad()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        public IActionResult InfoSeguridad(UsuarioModel usuario)
+        {
+            ViewBag.Mensaje = "La información no se ha actualizado correctamente";
+            usuario.ConsecutivoUsuario = (int)HttpContext.Session.GetInt32("ConsecutivoUsuario")!;
+
+            using (var context = _factory.CreateClient())
+            {
+                var urlApi = _configuration["Valores:UrlAPI"] + "Usuario/ActualizarSeguridad";
+                var resultado = context.PutAsJsonAsync(urlApi, usuario).Result;
+
+                if (resultado.IsSuccessStatusCode)
+                {
+                    var datosApi = resultado.Content.ReadFromJsonAsync<int>().Result;
+
+                    if (datosApi > 0)
+                        ViewBag.Mensaje = "La información se ha actualizado correctamente";
+                }
+
+                return View();
+            }
+        }
+
+        #endregion
+
     }
 }

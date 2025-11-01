@@ -83,9 +83,9 @@ GO
 
 SET IDENTITY_INSERT [dbo].[tbUsuario] ON 
 GO
-INSERT [dbo].[tbUsuario] ([ConsecutivoUsuario], [Identificacion], [Nombre], [CorreoElectronico], [Contrasenna], [Estado], [ConsecutivoPerfil]) VALUES (1, N'208690734', N'DIEGO ARMANDO PICADO MURILLO', N'dpicado90734@ufide.ac.cr', N'27Y6G1DD', 1, 2)
+INSERT [dbo].[tbUsuario] ([ConsecutivoUsuario], [Identificacion], [Nombre], [CorreoElectronico], [Contrasenna], [Estado], [ConsecutivoPerfil]) VALUES (1, N'208690734', N'DIEGO ARMANDO PICADO MURILLO', N'dpicado90734@ufide.ac.cr', N'Saprissa', 1, 2)
 GO
-INSERT [dbo].[tbUsuario] ([ConsecutivoUsuario], [Identificacion], [Nombre], [CorreoElectronico], [Contrasenna], [Estado], [ConsecutivoPerfil]) VALUES (2, N'304590415', N'EDUARDO JOSE CALVO CASTILLO', N'ecalvo90415@ufide.ac.cr', N'90415', 1, 1)
+INSERT [dbo].[tbUsuario] ([ConsecutivoUsuario], [Identificacion], [Nombre], [CorreoElectronico], [Contrasenna], [Estado], [ConsecutivoPerfil]) VALUES (2, N'117100315', N'MEJIA FERNANDEZ ADRIAN', N'amejia00315@ufide.ac.cr', N'LDA', 1, 1)
 GO
 SET IDENTITY_INSERT [dbo].[tbUsuario] OFF
 GO
@@ -109,6 +109,23 @@ BEGIN
 END
 GO
 
+CREATE PROCEDURE [dbo].[ActualizarPerfil]
+	@ConsecutivoUsuario int,
+    @Identificacion varchar(15),
+    @Nombre varchar(255),
+    @CorreoElectronico varchar(100)
+AS
+BEGIN
+	
+    UPDATE  dbo.tbUsuario
+    SET     Identificacion = @Identificacion,
+            Nombre = @Nombre,
+            CorreoElectronico = @CorreoElectronico
+    WHERE   ConsecutivoUsuario = @ConsecutivoUsuario
+
+END
+GO
+
 CREATE PROCEDURE [dbo].[ConsultarProductos]
 
 AS
@@ -120,6 +137,26 @@ BEGIN
             Estado,
             Imagen
       FROM  dbo.tbProducto
+
+END
+GO
+
+CREATE PROCEDURE [dbo].[ConsultarUsuario]
+    @ConsecutivoUsuario INT
+AS
+BEGIN
+	
+    SELECT  ConsecutivoUsuario,
+            Identificacion,
+            U.Nombre,
+            CorreoElectronico,
+            Contrasenna,
+            Estado,
+            U.ConsecutivoPerfil,
+            P.Nombre 'NombrePerfil'
+      FROM  dbo.tbUsuario U
+      INNER JOIN dbo.tbPerfil P ON U.ConsecutivoPerfil = P.ConsecutivoPerfil
+      WHERE ConsecutivoUsuario = @ConsecutivoUsuario
 
 END
 GO

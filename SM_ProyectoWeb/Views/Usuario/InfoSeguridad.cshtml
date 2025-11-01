@@ -1,0 +1,47 @@
+﻿@model UsuarioModel
+
+@{
+    Layout = "~/Views/Shared/_LayoutInterno.cshtml";
+}
+
+<div class="card mb-4 mt-4">
+
+    @if (ViewBag.Mensaje != null)
+    {
+        <div class="alert alert-primary text-center">
+            @ViewBag.Mensaje
+        </div>
+    }
+
+    <h4 class="card-header text-center">Seguridad</h4>
+    <div class="card-body">
+
+        <div class="row">
+
+            <div class="col-md-2"></div>
+            <div class="col-md-8">
+                <form id="FormSeguridad" class="mb-3" asp-action="InfoSeguridad" asp-controller="Usuario">
+                    
+                    <div class="mb-3 form-password-toggle">
+                        <label class="form-label">Contraseña Nueva</label>
+                        <input type="password" class="form-control" asp-for="Contrasenna" />
+                    </div>
+
+                    <div class="mb-3 form-password-toggle">
+                        <label class="form-label">Confirmar Contraseña</label>
+                        <input type="password" class="form-control" asp-for="ContrasennaConfirmar" />
+                    </div>
+
+                    <div class="d-flex justify-content-end">
+                        <button class="btn btn-primary d-grid w-25" type="submit">Procesar</button>
+                    </div>
+
+                </form>
+            </div>
+
+        </div>
+
+    </div>
+</div>
+
+<script src="~/js/Seguridad.js" asp-append-version="true"></script>
