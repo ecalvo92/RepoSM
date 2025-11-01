@@ -119,5 +119,13 @@ namespace SM_ProyectoWeb.Controllers
             return View();
         }
 
+        [Seguridad]
+        [HttpGet]
+        public IActionResult CerrarSesion()
+        {
+            HttpContext.Session.Clear();
+            return RedirectToAction("Index", "Home");
+        }
+
     }
 }
