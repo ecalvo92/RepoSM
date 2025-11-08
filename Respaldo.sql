@@ -33,6 +33,7 @@ GO
 CREATE TABLE [dbo].[tbProducto](
 	[ConsecutivoProducto] [int] IDENTITY(1,1) NOT NULL,
 	[Nombre] [varchar](100) NOT NULL,
+	[Descripcion] [varchar](2000) NOT NULL,
 	[Precio] [decimal](10, 2) NOT NULL,
 	[Estado] [bit] NOT NULL,
 	[Imagen] [varchar](255) NOT NULL,
@@ -76,7 +77,9 @@ GO
 
 SET IDENTITY_INSERT [dbo].[tbProducto] ON 
 GO
-INSERT [dbo].[tbProducto] ([ConsecutivoProducto], [Nombre], [Precio], [Estado], [Imagen]) VALUES (1, N'Bolsa Dulces', CAST(2500.00 AS Decimal(10, 2)), 1, N'------')
+INSERT [dbo].[tbProducto] ([ConsecutivoProducto], [Nombre], [Descripcion], [Precio], [Estado], [Imagen]) VALUES (1, N'Caja de fresas', N'Fresas de temporada de este año', CAST(2500.00 AS Decimal(10, 2)), 1, N'/imagenes/')
+GO
+INSERT [dbo].[tbProducto] ([ConsecutivoProducto], [Nombre], [Descripcion], [Precio], [Estado], [Imagen]) VALUES (2, N'Caja de fresas pequeña', N'fruta de temporada de fresas pequeñillas', CAST(680.00 AS Decimal(10, 2)), 1, N'/imagenes/')
 GO
 SET IDENTITY_INSERT [dbo].[tbProducto] OFF
 GO
@@ -85,7 +88,7 @@ SET IDENTITY_INSERT [dbo].[tbUsuario] ON
 GO
 INSERT [dbo].[tbUsuario] ([ConsecutivoUsuario], [Identificacion], [Nombre], [CorreoElectronico], [Contrasenna], [Estado], [ConsecutivoPerfil]) VALUES (1, N'208690734', N'DIEGO ARMANDO PICADO MURILLO', N'dpicado90734@ufide.ac.cr', N'Saprissa', 1, 2)
 GO
-INSERT [dbo].[tbUsuario] ([ConsecutivoUsuario], [Identificacion], [Nombre], [CorreoElectronico], [Contrasenna], [Estado], [ConsecutivoPerfil]) VALUES (2, N'117100315', N'MEJIA FERNANDEZ ADRIAN', N'amejia00315@ufide.ac.cr', N'LDA', 1, 1)
+INSERT [dbo].[tbUsuario] ([ConsecutivoUsuario], [Identificacion], [Nombre], [CorreoElectronico], [Contrasenna], [Estado], [ConsecutivoPerfil]) VALUES (2, N'117100315', N'MEJIA FERNANDEZ ADRIAN', N'amejia00315@ufide.ac.cr', N'123', 1, 1)
 GO
 SET IDENTITY_INSERT [dbo].[tbUsuario] OFF
 GO
@@ -193,6 +196,36 @@ BEGIN
         INSERT INTO dbo.tbUsuario (Identificacion,Nombre,CorreoElectronico,Contrasenna,Estado,ConsecutivoPerfil)
         VALUES (@Identificacion,@Nombre,@CorreoElectronico,@Contrasenna,@Estado,@Perfil)
     
+    END
+
+END
+GO
+
+CREATE PROCEDURE [dbo].[RegistroProductos]
+	@Nombre VARCHAR(100),
+    @Descripcion VARCHAR(2000),
+    @Precio DECIMAL(10,2),
+    @Imagen VARCHAR(255)
+AS
+BEGIN
+	
+    DECLARE @Estado BIT = 1
+
+    IF NOT EXISTS(SELECT 1 FROM dbo.tbProducto 
+        WHERE   Nombre = @Nombre)
+    BEGIN
+
+        INSERT INTO dbo.tbProducto(Nombre,Descripcion,Precio,Estado,Imagen)
+        VALUES (@Nombre, @Descripcion, @Precio, @Estado, @Imagen)
+
+        SELECT @@IDENTITY 'ConsecutivoProducto'
+    
+    END
+    ELSE
+    BEGIN
+
+        SELECT 0 'ConsecutivoProducto'
+
     END
 
 END
