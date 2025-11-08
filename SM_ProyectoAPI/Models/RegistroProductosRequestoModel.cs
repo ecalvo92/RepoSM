@@ -1,12 +1,16 @@
-﻿namespace SM_ProyectoWeb.Models
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace SM_ProyectoAPI.Models
 {
-    public class ProductoModel
+    public class RegistroProductosRequestoModel
     {
-        public int ConsecutivoProducto { get; set; }
+        [Required]
         public string Nombre { get; set; } = string.Empty;
+        [Required]
         public string Descripcion { get; set; } = string.Empty;
+        [Required]
         public decimal Precio { get; set; }
-        public bool Estado { get; set; }
+        [Required]
         public string Imagen { get; set; } = string.Empty;
     }
 }

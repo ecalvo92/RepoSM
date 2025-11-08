@@ -28,5 +28,22 @@ namespace SM_ProyectoAPI.Controllers
                 return Ok(resultado);
             }
         }
+
+        [HttpPost]
+        [Route("RegistroProductos")]
+        public IActionResult RegistroProductos(RegistroProductosRequestoModel producto)
+        {
+            using (var context = new SqlConnection(_configuration["ConnectionStrings:BDConnection"]))
+            {
+                var parametros = new DynamicParameters();
+                parametros.Add("@Nombre", producto.Nombre);
+                parametros.Add("@Descripcion", producto.Descripcion);
+                parametros.Add("@Precio", producto.Precio);
+                parametros.Add("@Imagen", producto.Imagen);
+
+                var resultado = context.QueryFirstOrDefault<ProductoResponse>("RegistroProductos", parametros);
+                return Ok(resultado!.ConsecutivoProducto);
+            }
+        }
     }
 }
