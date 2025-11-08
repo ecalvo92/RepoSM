@@ -1,6 +1,6 @@
-﻿using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using SM_ProyectoWeb.Models;
+using System.Net.Http.Headers;
 
 namespace SM_ProyectoWeb.Controllers
 {
@@ -25,6 +25,7 @@ namespace SM_ProyectoWeb.Controllers
             using (var context = _factory.CreateClient())
             {
                 var urlApi = _configuration["Valores:UrlAPI"] + "Usuario/ConsultarUsuario?ConsecutivoUsuario=" + consecutivoUsuario;
+                context.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", HttpContext.Session.GetString("Token"));
                 var resultado = context.GetAsync(urlApi).Result;
 
                 if (resultado.IsSuccessStatusCode)
@@ -36,7 +37,7 @@ namespace SM_ProyectoWeb.Controllers
                 }
 
                 ViewBag.Mensaje = "No se ha recuperado correctamente su información";
-                return View( new UsuarioModel());
+                return View(new UsuarioModel());
             }
         }
 
@@ -49,6 +50,7 @@ namespace SM_ProyectoWeb.Controllers
             using (var context = _factory.CreateClient())
             {
                 var urlApi = _configuration["Valores:UrlAPI"] + "Usuario/ActualizarPerfil";
+                context.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", HttpContext.Session.GetString("Token"));
                 var resultado = context.PutAsJsonAsync(urlApi, usuario).Result;
 
                 if (resultado.IsSuccessStatusCode)
@@ -61,7 +63,7 @@ namespace SM_ProyectoWeb.Controllers
                         ViewBag.Mensaje = "La información se ha actualizado correctamente";
                     }
                 }
-                
+
                 return View();
             }
         }
@@ -85,6 +87,7 @@ namespace SM_ProyectoWeb.Controllers
             using (var context = _factory.CreateClient())
             {
                 var urlApi = _configuration["Valores:UrlAPI"] + "Usuario/ActualizarSeguridad";
+                context.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", HttpContext.Session.GetString("Token"));
                 var resultado = context.PutAsJsonAsync(urlApi, usuario).Result;
 
                 if (resultado.IsSuccessStatusCode)

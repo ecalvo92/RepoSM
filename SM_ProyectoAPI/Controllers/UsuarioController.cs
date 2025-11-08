@@ -1,11 +1,12 @@
 ﻿using Dapper;
-using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Data.SqlClient;
 using SM_ProyectoAPI.Models;
 
 namespace SM_ProyectoAPI.Controllers
 {
+    [Authorize]
     [Route("api/[controller]")]
     [ApiController]
     public class UsuarioController : ControllerBase
@@ -44,7 +45,7 @@ namespace SM_ProyectoAPI.Controllers
                 parametros.Add("@Identificacion", usuario.Identificacion);
                 parametros.Add("@Nombre", usuario.Nombre);
                 parametros.Add("@CorreoElectronico", usuario.CorreoElectronico);
-                
+
                 var resultado = context.Execute("ActualizarPerfil", parametros);
                 return Ok(resultado);
             }

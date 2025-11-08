@@ -7,7 +7,7 @@ builder.Services.AddSession();
 var app = builder.Build();
 
 app.UseExceptionHandler("/Error/MostrarError");
-    
+
 app.UseHsts();
 
 app.UseSession();

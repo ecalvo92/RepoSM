@@ -1,11 +1,12 @@
 ﻿using Dapper;
-using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Data.SqlClient;
 using SM_ProyectoAPI.Models;
 
 namespace SM_ProyectoAPI.Controllers
 {
+    [Authorize]
     [Route("api/[controller]")]
     [ApiController]
     public class ProductoController : ControllerBase
@@ -45,5 +46,6 @@ namespace SM_ProyectoAPI.Controllers
                 return Ok(resultado!.ConsecutivoProducto);
             }
         }
+
     }
 }

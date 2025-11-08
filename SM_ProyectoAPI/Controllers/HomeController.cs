@@ -1,16 +1,20 @@
 ﻿using Dapper;
 using MailKit.Net.Smtp;
 using MailKit.Security;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Localization;
 using Microsoft.Data.SqlClient;
+using Microsoft.IdentityModel.Tokens;
 using MimeKit;
 using SM_ProyectoAPI.Models;
+using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
 using System.Security.Cryptography;
 using System.Text;
 
 namespace SM_ProyectoAPI.Controllers
 {
+    [AllowAnonymous]
     [Route("api/[controller]")]
     [ApiController]
     public class HomeController : ControllerBase
@@ -51,8 +55,11 @@ namespace SM_ProyectoAPI.Controllers
                 parametros.Add("@Contrasenna", usuario.Contrasenna);
                 var resultado = context.QueryFirstOrDefault<ValidarSesionResponse>("ValidarInicioSesion", parametros);
 
-                if(resultado != null)
+                if (resultado != null)
+                {
+                    resultado.Token = GenerarToken(resultado.ConsecutivoUsuario, resultado.Nombre, resultado.ConsecutivoPerfil);
                     return Ok(resultado);
+                }
 
                 return NotFound();
             }
@@ -143,5 +150,29 @@ namespace SM_ProyectoAPI.Controllers
             }
         }
 
+        private string GenerarToken(int userId, string userName, int userRol)
+        {
+            var key = _configuration["Valores:KeyJWT"]!;
+
+            var claims = new List<Claim>
+            {
+                new Claim("userId", userId.ToString()),
+                new Claim("userName", userName),
+                new Claim("userRol", userRol.ToString())
+            };
+
+            // Crear la clave y credenciales de firma
+            var securitykey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(key));
+            var creds = new SigningCredentials(securitykey, SecurityAlgorithms.HmacSha256);
+
+            var token = new JwtSecurityToken(
+                claims: claims,
+                notBefore: DateTime.UtcNow,
+                expires: DateTime.UtcNow.AddMinutes(30),
+                signingCredentials: creds
+            );
+
+            return new JwtSecurityTokenHandler().WriteToken(token);
+        }
     }
 }

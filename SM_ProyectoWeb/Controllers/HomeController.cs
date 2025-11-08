@@ -38,6 +38,7 @@ namespace SM_ProyectoWeb.Controllers
                         HttpContext.Session.SetInt32("ConsecutivoUsuario", datosApi.ConsecutivoUsuario);
                         HttpContext.Session.SetString("NombreUsuario", datosApi.Nombre);
                         HttpContext.Session.SetString("NombrePerfil", datosApi.NombrePerfil);
+                        HttpContext.Session.SetString("Token", datosApi.Token);
 
                         return RedirectToAction("Principal", "Home");
                     }
@@ -71,7 +72,7 @@ namespace SM_ProyectoWeb.Controllers
                     var datosApi = resultado.Content.ReadFromJsonAsync<int>().Result;
 
                     if (datosApi > 0)
-                        return RedirectToAction("Index","Home");
+                        return RedirectToAction("Index", "Home");
                 }
 
                 ViewBag.Mensaje = "No se ha registrado la información";

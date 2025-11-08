@@ -12,7 +12,7 @@ namespace SM_ProyectoWeb.Models
                 context.Result = new RedirectToActionResult("Index", "Home", null);
             }
             else
-            { 
+            {
                 base.OnActionExecuting(context);
             }
         }

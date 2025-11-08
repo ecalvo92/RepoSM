@@ -1,6 +1,4 @@
-﻿using Microsoft.Extensions.Diagnostics.HealthChecks;
-
-namespace SM_ProyectoAPI.Models
+﻿namespace SM_ProyectoAPI.Models
 {
     public class ValidarSesionResponse
     {
@@ -12,5 +10,6 @@ namespace SM_ProyectoAPI.Models
         public bool Estado { get; set; }
         public int ConsecutivoPerfil { get; set; }
         public string NombrePerfil { get; set; } = string.Empty;
+        public string Token { get; set; } = string.Empty;
     }
 }

@@ -11,5 +11,6 @@
         public int ConsecutivoPerfil { get; set; }
         public string NombrePerfil { get; set; } = string.Empty;
         public string ContrasennaConfirmar { get; set; } = string.Empty;
+        public string Token { get; set; } = string.Empty;
     }
 }

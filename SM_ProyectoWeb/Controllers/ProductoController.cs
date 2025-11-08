@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using SM_ProyectoWeb.Models;
+using System.Net.Http.Headers;
 
 namespace SM_ProyectoWeb.Controllers
 {
@@ -20,6 +21,7 @@ namespace SM_ProyectoWeb.Controllers
             using (var context = _factory.CreateClient())
             {
                 var urlApi = _configuration["Valores:UrlAPI"] + "Producto/ConsultarProductos";
+                context.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", HttpContext.Session.GetString("Token"));
                 var resultado = context.GetAsync(urlApi).Result;
 
                 if (resultado.IsSuccessStatusCode)
@@ -36,7 +38,7 @@ namespace SM_ProyectoWeb.Controllers
 
         [HttpGet]
         public IActionResult AgregarProductos()
-        { 
+        {
             return View();
         }
 
@@ -48,6 +50,7 @@ namespace SM_ProyectoWeb.Controllers
             using (var context = _factory.CreateClient())
             {
                 var urlApi = _configuration["Valores:UrlAPI"] + "Producto/RegistroProductos";
+                context.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", HttpContext.Session.GetString("Token"));
                 var resultado = context.PostAsJsonAsync(urlApi, producto).Result;
 
                 if (resultado.IsSuccessStatusCode)
@@ -78,5 +81,19 @@ namespace SM_ProyectoWeb.Controllers
                 return View();
             }
         }
+
+
+        [HttpGet]
+        public IActionResult ActualizarProductos()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        public IActionResult ActualizarProductos(ProductoModel producto, IFormFile Imagen)
+        {
+            return View();
+        }
+
     }
 }
