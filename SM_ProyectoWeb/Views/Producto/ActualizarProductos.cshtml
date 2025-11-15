@@ -1,0 +1,67 @@
+﻿@model ProductoModel
+
+@{
+    Layout = "~/Views/Shared/_LayoutInterno.cshtml";
+}
+
+<div class="card mb-4 mt-4">
+
+    @if (ViewBag.Mensaje != null)
+    {
+        <div class="alert alert-primary text-center">
+            @ViewBag.Mensaje
+        </div>
+    }
+
+    <h4 class="card-header text-center">Actualizar Producto</h4>
+    <div class="card-body">
+
+        <div class="row">
+
+            <div class="col-md-2"></div>
+            <div class="col-md-8">
+
+                <form id="FormActualizarProducto" class="mb-3" asp-action="ActualizarProductos" asp-controller="Producto" enctype="multipart/form-data">
+                    
+                    <input type="hidden" class="form-control" asp-for="ConsecutivoProducto" />
+                    
+                    <div class="row align-items-center mb-3">
+                        <div class="col-10">
+                            <label class="form-label">Nombre</label>
+                            <input type="text" class="form-control" asp-for="Nombre" />
+                        </div>
+
+                        <div class="col-2 text-center">
+                            <img src="@($"{Model.Imagen}{Model.ConsecutivoProducto}.png")"
+                                 width="110" height="110" />
+                        </div>
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label">Descripción</label>
+                        <textarea class="form-control" rows="3" asp-for="Descripcion"></textarea>
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label">Precio</label>
+                        <input type="text" class="form-control" asp-for="Precio" />
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label">Imagen</label>
+                        <input type="file" class="form-control" asp-for="Imagen" />
+                    </div>
+
+                    <div class="d-flex justify-content-end">
+                        <button class="btn btn-primary d-grid w-25" type="submit">Procesar</button>
+                    </div>
+
+                </form>
+            </div>
+
+        </div>
+
+    </div>
+</div>
+
+<script src="~/js/ActualizarProducto.js" asp-append-version="true"></script>

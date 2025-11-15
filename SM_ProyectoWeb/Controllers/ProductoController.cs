@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using SM_ProyectoWeb.Models;
 using System.Net.Http.Headers;
+using static System.Net.Mime.MediaTypeNames;
 
 namespace SM_ProyectoWeb.Controllers
 {
@@ -18,22 +19,8 @@ namespace SM_ProyectoWeb.Controllers
         [HttpGet]
         public IActionResult ConsultarProductos()
         {
-            using (var context = _factory.CreateClient())
-            {
-                var urlApi = _configuration["Valores:UrlAPI"] + "Producto/ConsultarProductos";
-                context.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", HttpContext.Session.GetString("Token"));
-                var resultado = context.GetAsync(urlApi).Result;
-
-                if (resultado.IsSuccessStatusCode)
-                {
-                    var datosApi = resultado.Content.ReadFromJsonAsync<List<ProductoModel>>().Result;
-
-                    return View(datosApi);
-                }
-
-                ViewBag.Mensaje = "No hay productos registrados en este momento";
-                return View(new List<ProductoModel>());
-            }
+            var respuesta = ConsultarDatosProductos(0);
+            return View(respuesta);
         }
 
         [HttpGet]
@@ -59,20 +46,7 @@ namespace SM_ProyectoWeb.Controllers
 
                     if (datosApi > 0)
                     {
-                        //save imagen 
-                        var carpeta = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "imagenes");
-
-                        if (!Directory.Exists(carpeta))
-                            Directory.CreateDirectory(carpeta);
-
-                        var nombreImagen = datosApi + ".png";
-                        var carpetaFinal = Path.Combine(carpeta, nombreImagen);
-
-                        using (var stream = new FileStream(carpetaFinal, FileMode.Create))
-                        {
-                            Imagen.CopyTo(stream);
-                        }
-
+                        GuardarDatosImagen(Imagen, datosApi);
                         return RedirectToAction("ConsultarProductos", "Producto");
                     }
                 }
@@ -84,15 +58,77 @@ namespace SM_ProyectoWeb.Controllers
 
 
         [HttpGet]
-        public IActionResult ActualizarProductos()
+        public IActionResult ActualizarProductos(int id)
         {
-            return View();
+            var respuesta = ConsultarDatosProductos(id);
+            return View(respuesta?.FirstOrDefault());
         }
 
         [HttpPost]
         public IActionResult ActualizarProductos(ProductoModel producto, IFormFile Imagen)
         {
-            return View();
+            producto.Imagen = "/imagenes/";
+
+            using (var context = _factory.CreateClient())
+            {
+                var urlApi = _configuration["Valores:UrlAPI"] + "Producto/ActualizarProductos";
+                context.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", HttpContext.Session.GetString("Token"));
+                var resultado = context.PutAsJsonAsync(urlApi, producto).Result;
+
+                if (resultado.IsSuccessStatusCode)
+                {
+                    var datosApi = resultado.Content.ReadFromJsonAsync<int>().Result;
+
+                    if (datosApi > 0)
+                    {
+                        GuardarDatosImagen(Imagen, producto.ConsecutivoProducto);
+                        return RedirectToAction("ConsultarProductos", "Producto");
+                    }
+                }
+
+                ViewBag.Mensaje = "No se ha registrado la información";
+                return View();
+            }
+        }
+
+        private List<ProductoModel>? ConsultarDatosProductos(int id)
+        {
+            using (var context = _factory.CreateClient())
+            {
+                var urlApi = _configuration["Valores:UrlAPI"] + "Producto/ConsultarProductos?ConsecutivoProducto=" + id;
+                context.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", HttpContext.Session.GetString("Token"));
+                var resultado = context.GetAsync(urlApi).Result;
+
+                if (resultado.IsSuccessStatusCode)
+                {
+                    var datosApi = resultado.Content.ReadFromJsonAsync<List<ProductoModel>>().Result;
+
+                    return datosApi;
+                }
+
+                ViewBag.Mensaje = "No hay productos registrados en este momento";
+                return new List<ProductoModel>();
+            }
+        }
+
+        private void GuardarDatosImagen(IFormFile Imagen, int ConsecutivoProducto)
+        {
+            if (Imagen != null)
+            {
+                //save imagen 
+                var carpeta = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "imagenes");
+
+                if (!Directory.Exists(carpeta))
+                    Directory.CreateDirectory(carpeta);
+
+                var nombreImagen = ConsecutivoProducto + ".png";
+                var carpetaFinal = Path.Combine(carpeta, nombreImagen);
+
+                using (var stream = new FileStream(carpetaFinal, FileMode.Create))
+                {
+                    Imagen.CopyTo(stream);
+                }
+            }
         }
 
     }
