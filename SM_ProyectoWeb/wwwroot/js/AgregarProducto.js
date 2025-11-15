@@ -21,8 +21,6 @@
             },
             Precio: {
                 required: true,
-                number: true,
-                min: 0.01,
                 maxlength: 8
             },
             Imagen: {
@@ -42,10 +40,7 @@
             },
             Precio: {
                 required: "Requerido",
-                number: "Debe ingresar un valor numérico.",
-                min: "El precio no puede ser negativo.",
-                maxlength: "Máximo 8 dígitos.",
-                pattern: "Máximo 8 dígitos enteros y opcionalmente decimales."
+                maxlength: "Máximo 8 dígitos."
             },
             Imagen: {
                 required: "Requerido",

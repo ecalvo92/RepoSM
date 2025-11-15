@@ -2,8 +2,10 @@
 
 namespace SM_ProyectoAPI.Models
 {
-    public class RegistroProductosRequestoModel
+    public class ActualizarProductoRequestModel
     {
+        [Required]
+        public int ConsecutivoProducto { get; set; }
         [Required]
         public string Nombre { get; set; } = string.Empty;
         [Required]

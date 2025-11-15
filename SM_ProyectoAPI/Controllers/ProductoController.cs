@@ -33,7 +33,7 @@ namespace SM_ProyectoAPI.Controllers
 
         [HttpPost]
         [Route("RegistroProductos")]
-        public IActionResult RegistroProductos(RegistroProductosRequestoModel producto)
+        public IActionResult RegistroProductos(RegistroProductosRequestModel producto)
         {
             using (var context = new SqlConnection(_configuration["ConnectionStrings:BDConnection"]))
             {
@@ -48,5 +48,24 @@ namespace SM_ProyectoAPI.Controllers
             }
         }
 
+
+        [HttpPut]
+        [Route("ActualizarProductos")]
+        public IActionResult ActualizarProductos(ActualizarProductoRequestModel producto)
+        {
+            using (var context = new SqlConnection(_configuration["ConnectionStrings:BDConnection"]))
+            {
+                var parametros = new DynamicParameters();
+                parametros.Add("@ConsecutivoProducto", producto.ConsecutivoProducto);
+                parametros.Add("@Nombre", producto.Nombre);
+                parametros.Add("@Descripcion", producto.Descripcion);
+                parametros.Add("@Precio", producto.Precio);
+                parametros.Add("@Imagen", producto.Imagen);
+
+                var resultado = context.Execute("ActualizarProductos", parametros);
+                return Ok(resultado);
+            }
+        }
+        
     }
 }
