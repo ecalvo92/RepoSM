@@ -63,6 +63,10 @@ SET IDENTITY_INSERT [dbo].[tbError] ON
 GO
 INSERT [dbo].[tbError] ([ConsecutivoError], [ConsecutivoUsuario], [Mensaje], [Origen], [FechaHora]) VALUES (1, 0, N'Could not find stored procedure ''ValidarUsu''.', N'/api/Home/RecuperarAcceso', CAST(N'2025-10-18T08:50:28.500' AS DateTime))
 GO
+INSERT [dbo].[tbError] ([ConsecutivoError], [ConsecutivoUsuario], [Mensaje], [Origen], [FechaHora]) VALUES (2, 0, N'Object reference not set to an instance of an object.', N'/api/Home/IniciarSesion', CAST(N'2025-11-22T09:44:46.830' AS DateTime))
+GO
+INSERT [dbo].[tbError] ([ConsecutivoError], [ConsecutivoUsuario], [Mensaje], [Origen], [FechaHora]) VALUES (3, 1, N'Object reference not set to an instance of an object.', N'/api/Producto/ConsultarProductos', CAST(N'2025-11-22T09:46:34.057' AS DateTime))
+GO
 SET IDENTITY_INSERT [dbo].[tbError] OFF
 GO
 
@@ -77,16 +81,16 @@ GO
 
 SET IDENTITY_INSERT [dbo].[tbProducto] ON 
 GO
-INSERT [dbo].[tbProducto] ([ConsecutivoProducto], [Nombre], [Descripcion], [Precio], [Estado], [Imagen]) VALUES (1, N'Play 5', N'consola de videojuegos', CAST(200000.00 AS Decimal(10, 2)), 1, N'/imagenes/')
+INSERT [dbo].[tbProducto] ([ConsecutivoProducto], [Nombre], [Descripcion], [Precio], [Estado], [Imagen]) VALUES (1, N'Play 5', N'consola de videojuegos', CAST(200000.00 AS Decimal(10, 2)), 0, N'/imagenes/')
 GO
-INSERT [dbo].[tbProducto] ([ConsecutivoProducto], [Nombre], [Descripcion], [Precio], [Estado], [Imagen]) VALUES (2, N'Caja de fresas pequeña', N'fruta de temporada de fresas pequeñillas', CAST(680.00 AS Decimal(10, 2)), 1, N'/imagenes/')
+INSERT [dbo].[tbProducto] ([ConsecutivoProducto], [Nombre], [Descripcion], [Precio], [Estado], [Imagen]) VALUES (2, N'Caja de fresas pequeña', N'fruta de temporada de fresas pequeñillas', CAST(680.00 AS Decimal(10, 2)), 0, N'/imagenes/')
 GO
 SET IDENTITY_INSERT [dbo].[tbProducto] OFF
 GO
 
 SET IDENTITY_INSERT [dbo].[tbUsuario] ON 
 GO
-INSERT [dbo].[tbUsuario] ([ConsecutivoUsuario], [Identificacion], [Nombre], [CorreoElectronico], [Contrasenna], [Estado], [ConsecutivoPerfil]) VALUES (1, N'208690734', N'DIEGO ARMANDO PICADO MURILLO', N'dpicado90734@ufide.ac.cr', N'Saprissa', 1, 2)
+INSERT [dbo].[tbUsuario] ([ConsecutivoUsuario], [Identificacion], [Nombre], [CorreoElectronico], [Contrasenna], [Estado], [ConsecutivoPerfil]) VALUES (1, N'208690734', N'DIEGO ARMANDO PICADO MURILLO', N'dpicado90734@ufide.ac.cr', N'123', 1, 2)
 GO
 INSERT [dbo].[tbUsuario] ([ConsecutivoUsuario], [Identificacion], [Nombre], [CorreoElectronico], [Contrasenna], [Estado], [ConsecutivoPerfil]) VALUES (2, N'117100315', N'MEJIA FERNANDEZ ADRIAN', N'amejia00315@ufide.ac.cr', N'123', 1, 1)
 GO
@@ -108,6 +112,18 @@ BEGIN
     UPDATE  dbo.tbUsuario
     SET     Contrasenna = @Contrasenna
     WHERE   ConsecutivoUsuario = @ConsecutivoUsuario
+
+END
+GO
+
+CREATE PROCEDURE [dbo].[ActualizarEstadoProducto]
+	@ConsecutivoProducto INT
+AS
+BEGIN
+	
+	UPDATE tbProducto
+	SET Estado = CASE WHEN Estado = 1 THEN 0 ELSE 1 END
+	WHERE ConsecutivoProducto = @ConsecutivoProducto
 
 END
 GO

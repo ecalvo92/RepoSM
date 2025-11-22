@@ -31,6 +31,7 @@ namespace SM_ProyectoAPI.Controllers
             }
         }
 
+
         [HttpPost]
         [Route("RegistroProductos")]
         public IActionResult RegistroProductos(RegistroProductosRequestModel producto)
@@ -63,6 +64,21 @@ namespace SM_ProyectoAPI.Controllers
                 parametros.Add("@Imagen", producto.Imagen);
 
                 var resultado = context.Execute("ActualizarProductos", parametros);
+                return Ok(resultado);
+            }
+        }
+
+
+        [HttpPut]
+        [Route("CambiarEstadoProducto")]
+        public IActionResult CambiarEstadoProducto(ActualizarEstadoProductoRequestModel producto)
+        {
+            using (var context = new SqlConnection(_configuration["ConnectionStrings:BDConnection"]))
+            {
+                var parametros = new DynamicParameters();
+                parametros.Add("@ConsecutivoProducto", producto.ConsecutivoProducto);
+
+                var resultado = context.Execute("ActualizarEstadoProducto", parametros);
                 return Ok(resultado);
             }
         }

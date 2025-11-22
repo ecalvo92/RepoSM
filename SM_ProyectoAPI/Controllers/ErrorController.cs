@@ -20,10 +20,12 @@ namespace SM_ProyectoAPI.Controllers
         {
             var excepcion = HttpContext.Features.Get<IExceptionHandlerFeature>();
 
+            int consecutivoUsuario = int.TryParse(HttpContext.User.FindFirst("userId")?.Value, out var id) ? id : 0;
+
             using (var context = new SqlConnection(_configuration["ConnectionStrings:BDConnection"]))
             {
                 var parametros = new DynamicParameters();
-                parametros.Add("@ConsecutivoUsuario", 0);
+                parametros.Add("@ConsecutivoUsuario", consecutivoUsuario);
                 parametros.Add("@Mensaje", excepcion?.Error.Message);
                 parametros.Add("@Origen", excepcion?.Path);
 

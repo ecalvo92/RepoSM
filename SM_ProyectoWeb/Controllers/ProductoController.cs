@@ -91,6 +91,32 @@ namespace SM_ProyectoWeb.Controllers
             }
         }
 
+
+        [HttpPost]
+        public IActionResult CambiarEstadoProducto(ProductoModel producto)
+        {
+            using (var context = _factory.CreateClient())
+            {
+                var urlApi = _configuration["Valores:UrlAPI"] + "Producto/CambiarEstadoProducto";
+                context.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", HttpContext.Session.GetString("Token"));
+                var resultado = context.PutAsJsonAsync(urlApi, producto).Result;
+
+                if (resultado.IsSuccessStatusCode)
+                {
+                    var datosApi = resultado.Content.ReadFromJsonAsync<int>().Result;
+
+                    if (datosApi > 0)
+                    {
+                        return RedirectToAction("ConsultarProductos", "Producto");
+                    }
+                }
+
+                ViewBag.Mensaje = "No se ha actualizado el estado del producto";
+                return View();
+            }
+        }
+
+
         private List<ProductoModel>? ConsultarDatosProductos(int id)
         {
             using (var context = _factory.CreateClient())
