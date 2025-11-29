@@ -37,6 +37,7 @@ CREATE TABLE [dbo].[tbProducto](
 	[Precio] [decimal](10, 2) NOT NULL,
 	[Estado] [bit] NOT NULL,
 	[Imagen] [varchar](255) NOT NULL,
+	[ConsecutivoUsuario] [int] NOT NULL,
  CONSTRAINT [PK_tbProducto] PRIMARY KEY CLUSTERED 
 (
 	[ConsecutivoProducto] ASC
@@ -49,9 +50,11 @@ CREATE TABLE [dbo].[tbUsuario](
 	[Identificacion] [varchar](15) NOT NULL,
 	[Nombre] [varchar](255) NOT NULL,
 	[CorreoElectronico] [varchar](100) NOT NULL,
-	[Contrasenna] [varchar](10) NOT NULL,
+	[Contrasenna] [varchar](100) NOT NULL,
 	[Estado] [bit] NOT NULL,
 	[ConsecutivoPerfil] [int] NOT NULL,
+	[NombreComercial] [varchar](50) NULL,
+	[ImagenComercial] [varchar](255) NULL,
  CONSTRAINT [PK_tbUsuario] PRIMARY KEY CLUSTERED 
 (
 	[ConsecutivoUsuario] ASC
@@ -81,20 +84,28 @@ GO
 
 SET IDENTITY_INSERT [dbo].[tbProducto] ON 
 GO
-INSERT [dbo].[tbProducto] ([ConsecutivoProducto], [Nombre], [Descripcion], [Precio], [Estado], [Imagen]) VALUES (1, N'Play 5', N'consola de videojuegos', CAST(200000.00 AS Decimal(10, 2)), 0, N'/imagenes/')
+INSERT [dbo].[tbProducto] ([ConsecutivoProducto], [Nombre], [Descripcion], [Precio], [Estado], [Imagen], [ConsecutivoUsuario]) VALUES (3, N'Play 5', N'Consola de videojuegos', CAST(500.00 AS Decimal(10, 2)), 1, N'/imagenes/', 3)
 GO
-INSERT [dbo].[tbProducto] ([ConsecutivoProducto], [Nombre], [Descripcion], [Precio], [Estado], [Imagen]) VALUES (2, N'Caja de fresas pequeña', N'fruta de temporada de fresas pequeñillas', CAST(680.00 AS Decimal(10, 2)), 0, N'/imagenes/')
+INSERT [dbo].[tbProducto] ([ConsecutivoProducto], [Nombre], [Descripcion], [Precio], [Estado], [Imagen], [ConsecutivoUsuario]) VALUES (4, N'Echo Dot MS', N'Se conoce como Alexa', CAST(130.00 AS Decimal(10, 2)), 1, N'/imagenes/', 4)
 GO
 SET IDENTITY_INSERT [dbo].[tbProducto] OFF
 GO
 
 SET IDENTITY_INSERT [dbo].[tbUsuario] ON 
 GO
-INSERT [dbo].[tbUsuario] ([ConsecutivoUsuario], [Identificacion], [Nombre], [CorreoElectronico], [Contrasenna], [Estado], [ConsecutivoPerfil]) VALUES (1, N'208690734', N'DIEGO ARMANDO PICADO MURILLO', N'dpicado90734@ufide.ac.cr', N'123', 1, 2)
+INSERT [dbo].[tbUsuario] ([ConsecutivoUsuario], [Identificacion], [Nombre], [CorreoElectronico], [Contrasenna], [Estado], [ConsecutivoPerfil], [NombreComercial], [ImagenComercial]) VALUES (3, N'208690734', N'DIEGO ARMANDO PICADO MURILLO', N'dpicado90734@ufide.ac.cr', N'm3myop4Qkcw1IHeuET5lKg==', 1, 1, N'Empresa SONY', N'/empresas/')
 GO
-INSERT [dbo].[tbUsuario] ([ConsecutivoUsuario], [Identificacion], [Nombre], [CorreoElectronico], [Contrasenna], [Estado], [ConsecutivoPerfil]) VALUES (2, N'117100315', N'MEJIA FERNANDEZ ADRIAN', N'amejia00315@ufide.ac.cr', N'123', 1, 1)
+INSERT [dbo].[tbUsuario] ([ConsecutivoUsuario], [Identificacion], [Nombre], [CorreoElectronico], [Contrasenna], [Estado], [ConsecutivoPerfil], [NombreComercial], [ImagenComercial]) VALUES (4, N'117100315', N'MEJIA FERNANDEZ ADRIAN', N'amejia00315@ufide.ac.cr', N'P/JNmLzk+Ypnq3mbN0RdKA==', 1, 1, N'Microsoft CR', N'/empresas/')
+GO
+INSERT [dbo].[tbUsuario] ([ConsecutivoUsuario], [Identificacion], [Nombre], [CorreoElectronico], [Contrasenna], [Estado], [ConsecutivoPerfil], [NombreComercial], [ImagenComercial]) VALUES (5, N'304590415', N'EDUARDO JOSE CALVO CASTILLO', N'ecalvo90415@ufide.ac.cr', N'EWpuohnFbZlrlas3Gq/reg==', 1, 2, NULL, NULL)
 GO
 SET IDENTITY_INSERT [dbo].[tbUsuario] OFF
+GO
+
+ALTER TABLE [dbo].[tbProducto]  WITH CHECK ADD  CONSTRAINT [FK_tbProducto_tbUsuario] FOREIGN KEY([ConsecutivoUsuario])
+REFERENCES [dbo].[tbUsuario] ([ConsecutivoUsuario])
+GO
+ALTER TABLE [dbo].[tbProducto] CHECK CONSTRAINT [FK_tbProducto_tbUsuario]
 GO
 
 ALTER TABLE [dbo].[tbUsuario]  WITH CHECK ADD  CONSTRAINT [FK_tbUsuario_tbPerfil] FOREIGN KEY([ConsecutivoPerfil])
@@ -105,7 +116,7 @@ GO
 
 CREATE PROCEDURE [dbo].[ActualizarContrasenna]
 	@ConsecutivoUsuario int,
-    @Contrasenna varchar(10)
+    @Contrasenna varchar(100)
 AS
 BEGIN
 	
@@ -116,14 +127,31 @@ BEGIN
 END
 GO
 
+CREATE PROCEDURE [dbo].[ActualizarEmpresa]
+	@ConsecutivoUsuario INT,
+    @NombreComercial VARCHAR(100),
+    @ImagenComercial VARCHAR(255)
+AS
+BEGIN
+	
+    UPDATE  dbo.tbUsuario
+       SET  NombreComercial = @NombreComercial,
+            ImagenComercial = @ImagenComercial
+     WHERE  ConsecutivoUsuario = @ConsecutivoUsuario
+
+END
+GO
+
 CREATE PROCEDURE [dbo].[ActualizarEstadoProducto]
-	@ConsecutivoProducto INT
+	@ConsecutivoProducto INT,
+	@ConsecutivoUsuario INT
 AS
 BEGIN
 	
 	UPDATE tbProducto
 	SET Estado = CASE WHEN Estado = 1 THEN 0 ELSE 1 END
 	WHERE ConsecutivoProducto = @ConsecutivoProducto
+		AND ConsecutivoUsuario = @ConsecutivoUsuario
 
 END
 GO
@@ -150,7 +178,8 @@ CREATE PROCEDURE [dbo].[ActualizarProductos]
     @Nombre VARCHAR(100),
     @Descripcion VARCHAR(2000),
     @Precio DECIMAL(10,2),
-    @Imagen VARCHAR(255)
+    @Imagen VARCHAR(255),
+    @ConsecutivoUsuario INT
 AS
 BEGIN
 	
@@ -160,12 +189,14 @@ BEGIN
             Precio = @Precio,
             Imagen = @Imagen
      WHERE  ConsecutivoProducto = @ConsecutivoProducto
+        AND ConsecutivoUsuario = @ConsecutivoUsuario
 
 END
 GO
 
 CREATE PROCEDURE [dbo].[ConsultarProductos]
-    @ConsecutivoProducto INT
+    @ConsecutivoProducto INT,
+    @ConsecutivoUsuario INT
 AS
 BEGIN
 	
@@ -180,6 +211,7 @@ BEGIN
             Descripcion
       FROM  dbo.tbProducto
       WHERE ConsecutivoProducto = ISNULL(@ConsecutivoProducto,ConsecutivoProducto)
+        AND ConsecutivoUsuario = @ConsecutivoUsuario
 
 END
 GO
@@ -196,10 +228,35 @@ BEGIN
             Contrasenna,
             Estado,
             U.ConsecutivoPerfil,
-            P.Nombre 'NombrePerfil'
+            P.Nombre 'NombrePerfil',
+            NombreComercial,
+            ImagenComercial
       FROM  dbo.tbUsuario U
       INNER JOIN dbo.tbPerfil P ON U.ConsecutivoPerfil = P.ConsecutivoPerfil
       WHERE ConsecutivoUsuario = @ConsecutivoUsuario
+
+END
+GO
+
+CREATE PROCEDURE [dbo].[ConsultarUsuarios]
+
+AS
+BEGIN
+	
+    SELECT  ConsecutivoUsuario,
+            Identificacion,
+            U.Nombre,
+            CorreoElectronico,
+            Contrasenna,
+            Estado,
+            U.ConsecutivoPerfil,
+            P.Nombre 'NombrePerfil',
+            NombreComercial,
+            ImagenComercial
+      FROM  dbo.tbUsuario U
+      INNER JOIN dbo.tbPerfil P ON U.ConsecutivoPerfil = P.ConsecutivoPerfil
+      WHERE Estado = 1
+        AND U.ConsecutivoPerfil = 1
 
 END
 GO
@@ -221,7 +278,7 @@ CREATE PROCEDURE [dbo].[Registro]
 	@Identificacion VARCHAR(15),
     @Nombre VARCHAR(255),
     @CorreoElectronico VARCHAR(100),
-    @Contrasenna VARCHAR(10)
+    @Contrasenna VARCHAR(100)
 AS
 BEGIN
 	
@@ -245,7 +302,8 @@ CREATE PROCEDURE [dbo].[RegistroProductos]
 	@Nombre VARCHAR(100),
     @Descripcion VARCHAR(2000),
     @Precio DECIMAL(10,2),
-    @Imagen VARCHAR(255)
+    @Imagen VARCHAR(255),
+    @ConsecutivoUsuario INT
 AS
 BEGIN
 	
@@ -255,8 +313,8 @@ BEGIN
         WHERE   Nombre = @Nombre)
     BEGIN
 
-        INSERT INTO dbo.tbProducto(Nombre,Descripcion,Precio,Estado,Imagen)
-        VALUES (@Nombre, @Descripcion, @Precio, @Estado, @Imagen)
+        INSERT INTO dbo.tbProducto(Nombre,Descripcion,Precio,Estado,Imagen,ConsecutivoUsuario)
+        VALUES (@Nombre, @Descripcion, @Precio, @Estado, @Imagen, @ConsecutivoUsuario)
 
         SELECT @@IDENTITY 'ConsecutivoProducto'
     
@@ -273,7 +331,7 @@ GO
 
 CREATE PROCEDURE [dbo].[ValidarInicioSesion]
     @CorreoElectronico VARCHAR(100),
-    @Contrasenna VARCHAR(10)
+    @Contrasenna VARCHAR(100)
 AS
 BEGIN
 	
