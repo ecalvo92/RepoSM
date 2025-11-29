@@ -11,6 +11,7 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Security.Cryptography;
 using System.Text;
+using Utiles;
 
 namespace SM_ProyectoAPI.Controllers
 {
@@ -70,6 +71,7 @@ namespace SM_ProyectoAPI.Controllers
         [Route("RecuperarAcceso")]
         public async Task<IActionResult> RecuperarAcceso(string CorreoElectronico)
         {
+            Helper h = new Helper();
             using (var context = new SqlConnection(_configuration["ConnectionStrings:BDConnection"]))
             {
                 var parametros = new DynamicParameters();
@@ -83,7 +85,7 @@ namespace SM_ProyectoAPI.Controllers
 
                     var parametrosActualizar = new DynamicParameters();
                     parametrosActualizar.Add("@ConsecutivoUsuario", resultado.ConsecutivoUsuario);
-                    parametrosActualizar.Add("@Contrasenna", contrasennaGenerada);
+                    parametrosActualizar.Add("@Contrasenna", h.Encrypt(contrasennaGenerada));
                     var resultadoActualizar = context.Execute("ActualizarContrasenna", parametrosActualizar);
 
                     if (resultadoActualizar > 0)

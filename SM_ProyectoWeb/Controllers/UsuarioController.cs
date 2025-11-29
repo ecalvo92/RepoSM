@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using SM_ProyectoWeb.Models;
 using System.Net.Http.Headers;
+using Utiles;
 
 namespace SM_ProyectoWeb.Controllers
 {
@@ -81,6 +82,9 @@ namespace SM_ProyectoWeb.Controllers
         [HttpPost]
         public IActionResult InfoSeguridad(UsuarioModel usuario)
         {
+            Helper h = new Helper();
+            usuario.Contrasenna = h.Encrypt(usuario.Contrasenna);
+
             ViewBag.Mensaje = "La información no se ha actualizado correctamente";
             usuario.ConsecutivoUsuario = (int)HttpContext.Session.GetInt32("ConsecutivoUsuario")!;
 

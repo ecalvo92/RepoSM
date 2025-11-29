@@ -1,11 +1,13 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 17
-VisualStudioVersion = 17.14.36429.23
+# Visual Studio Version 18
+VisualStudioVersion = 18.0.11222.15 d18.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SM_ProyectoWeb", "SM_ProyectoWeb\SM_ProyectoWeb.csproj", "{736F23B8-897B-4DE3-A6E8-237807AE84BF}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SM_ProyectoAPI", "SM_ProyectoAPI\SM_ProyectoAPI.csproj", "{9BC09639-8E38-468B-AFA9-730DAB7009C3}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Utiles", "Utiles\Utiles.csproj", "{5B5EEE09-F4B9-4949-92E6-F8B1AB1CAF77}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -21,6 +23,10 @@ Global
 		{9BC09639-8E38-468B-AFA9-730DAB7009C3}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{9BC09639-8E38-468B-AFA9-730DAB7009C3}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{9BC09639-8E38-468B-AFA9-730DAB7009C3}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5B5EEE09-F4B9-4949-92E6-F8B1AB1CAF77}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5B5EEE09-F4B9-4949-92E6-F8B1AB1CAF77}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5B5EEE09-F4B9-4949-92E6-F8B1AB1CAF77}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5B5EEE09-F4B9-4949-92E6-F8B1AB1CAF77}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

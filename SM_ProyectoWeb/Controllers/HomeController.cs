@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
 using SM_ProyectoWeb.Models;
+using Utiles;
 
 namespace SM_ProyectoWeb.Controllers
 {
@@ -24,6 +25,8 @@ namespace SM_ProyectoWeb.Controllers
         [HttpPost]
         public IActionResult Index(UsuarioModel usuario)
         {
+            Helper h = new Helper();
+            usuario.Contrasenna = h.Encrypt(usuario.Contrasenna);
             using (var context = _factory.CreateClient())
             {
                 var urlApi = _configuration["Valores:UrlAPI"] + "Home/IniciarSesion";
@@ -62,6 +65,8 @@ namespace SM_ProyectoWeb.Controllers
         [HttpPost]
         public IActionResult Registro(UsuarioModel usuario)
         {
+            Helper h = new Helper();
+            usuario.Contrasenna = h.Encrypt(usuario.Contrasenna);
             using (var context = _factory.CreateClient())
             {
                 var urlApi = _configuration["Valores:UrlAPI"] + "Home/Registro";
