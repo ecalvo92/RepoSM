@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
 using SM_ProyectoWeb.Models;
+using System.Net.Http.Headers;
 using Utiles;
 
 namespace SM_ProyectoWeb.Controllers
@@ -123,7 +124,21 @@ namespace SM_ProyectoWeb.Controllers
         [HttpGet]
         public IActionResult Principal()
         {
-            return View();
+            using (var context = _factory.CreateClient())
+            {
+                var urlApi = _configuration["Valores:UrlAPI"] + "Usuario/ConsultarUsuarios";
+                context.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", HttpContext.Session.GetString("Token"));
+                var resultado = context.GetAsync(urlApi).Result;
+
+                if (resultado.IsSuccessStatusCode)
+                {
+                    var datosApi = resultado.Content.ReadFromJsonAsync<List<UsuarioModel>>().Result;
+                    return View(datosApi);
+                }
+
+                ViewBag.Mensaje = "No hay empresas registradas en este momento";
+                return View(new List<UsuarioModel>());
+            }
         }
 
         [Seguridad]

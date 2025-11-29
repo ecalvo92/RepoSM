@@ -34,6 +34,22 @@ namespace SM_ProyectoAPI.Controllers
             }
         }
 
+        [HttpGet]
+        [Route("ConsultarUsuarios")]
+        public IActionResult ConsultarUsuarios()
+        {
+            using (var context = new SqlConnection(_configuration["ConnectionStrings:BDConnection"]))
+            {
+                var parametros = new DynamicParameters();
+                var resultado = context.Query<ValidarSesionResponse>("ConsultarUsuarios", parametros);
+
+                if (resultado.Any())
+                    return Ok(resultado);
+
+                return NotFound();
+            }
+        }        
+
         [HttpPut]
         [Route("ActualizarPerfil")]
         public IActionResult ActualizarPerfil(PerfilRequestModel usuario)
