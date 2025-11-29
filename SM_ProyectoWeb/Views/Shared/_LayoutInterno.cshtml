@@ -1,6 +1,7 @@
 ﻿@{
     var nombreUsuario = (Context.Session.GetString("NombreUsuario") != null ? Context.Session.GetString("NombreUsuario") : string.Empty);
     var nombrePerfil = (Context.Session.GetString("NombrePerfil") != null ? Context.Session.GetString("NombrePerfil") : string.Empty);
+    var consecutivoPerfil = (Context.Session.GetInt32("ConsecutivoPerfil") != null ? Context.Session.GetInt32("ConsecutivoPerfil") : 0);
 }
 
 <!DOCTYPE html>
@@ -46,16 +47,26 @@
 
                 <ul class="menu-inner py-1">
 
-                    <li class="menu-header small text-uppercase">
-                        <span class="menu-header-text">Mantenimientos</span>
-                    </li>
+                    @if (consecutivoPerfil == 1)         
+                    {
+                        <li class="menu-header small text-uppercase">
+                            <span class="menu-header-text">Mantenimientos</span>
+                        </li>
 
-                    <li class="menu-item">
-                        <a asp-action="ConsultarProductos" asp-controller="Producto" class="menu-link">
-                            <i class="menu-icon tf-icons bx bx-home-circle"></i>
-                            <div data-i18n="Analytics">Productos</div>
-                        </a>
-                    </li>
+                        <li class="menu-item">
+                            <a asp-action="Empresa" asp-controller="Usuario" class="menu-link">
+                                <i class="fa fa-briefcase me-2"></i>
+                                <div data-i18n="Analytics">Empresa</div>
+                            </a>
+                        </li>
+
+                        <li class="menu-item">
+                            <a asp-action="ConsultarProductos" asp-controller="Producto" class="menu-link">
+                                <i class="fa fa-tags me-2"></i>
+                                <div data-i18n="Analytics">Productos</div>
+                            </a>
+                        </li>                    
+                    }
 
                 </ul>
             </aside>

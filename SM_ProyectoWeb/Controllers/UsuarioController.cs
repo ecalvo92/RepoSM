@@ -16,6 +16,61 @@ namespace SM_ProyectoWeb.Controllers
             _factory = factory;
         }
 
+        #region Empresa
+
+        [HttpGet]
+        public IActionResult Empresa()
+        {
+            var consecutivoUsuario = HttpContext.Session.GetInt32("ConsecutivoUsuario");
+
+            using (var context = _factory.CreateClient())
+            {
+                var urlApi = _configuration["Valores:UrlAPI"] + "Usuario/ConsultarUsuario?ConsecutivoUsuario=" + consecutivoUsuario;
+                context.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", HttpContext.Session.GetString("Token"));
+                var resultado = context.GetAsync(urlApi).Result;
+
+                if (resultado.IsSuccessStatusCode)
+                {
+                    var datosApi = resultado.Content.ReadFromJsonAsync<UsuarioModel>().Result;
+
+                    if (datosApi != null)
+                        return View(datosApi);
+                }
+
+                ViewBag.Mensaje = "No se ha recuperado correctamente su información";
+                return View(new UsuarioModel());
+            }
+        }
+
+        //[HttpPost]
+        //public IActionResult Empresa(UsuarioModel usuario)
+        //{
+        //    ViewBag.Mensaje = "La información no se ha actualizado correctamente";
+        //    usuario.ConsecutivoUsuario = (int)HttpContext.Session.GetInt32("ConsecutivoUsuario")!;
+
+        //    using (var context = _factory.CreateClient())
+        //    {
+        //        var urlApi = _configuration["Valores:UrlAPI"] + "Usuario/ActualizarPerfil";
+        //        context.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", HttpContext.Session.GetString("Token"));
+        //        var resultado = context.PutAsJsonAsync(urlApi, usuario).Result;
+
+        //        if (resultado.IsSuccessStatusCode)
+        //        {
+        //            var datosApi = resultado.Content.ReadFromJsonAsync<int>().Result;
+
+        //            if (datosApi > 0)
+        //            {
+        //                HttpContext.Session.SetString("NombreUsuario", usuario.Nombre);
+        //                ViewBag.Mensaje = "La información se ha actualizado correctamente";
+        //            }
+        //        }
+
+        //        return View();
+        //    }
+        //}
+
+        #endregion
+
         #region Perfil
 
         [HttpGet]

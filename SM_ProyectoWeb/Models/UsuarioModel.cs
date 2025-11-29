@@ -12,5 +12,8 @@
         public string NombrePerfil { get; set; } = string.Empty;
         public string ContrasennaConfirmar { get; set; } = string.Empty;
         public string Token { get; set; } = string.Empty;
+
+        public string NombreComercial { get; set; } = string.Empty;
+        public string ImagenComercial { get; set; } = string.Empty;
     }
 }

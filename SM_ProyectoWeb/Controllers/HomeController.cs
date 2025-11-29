@@ -42,6 +42,7 @@ namespace SM_ProyectoWeb.Controllers
                         HttpContext.Session.SetString("NombreUsuario", datosApi.Nombre);
                         HttpContext.Session.SetString("NombrePerfil", datosApi.NombrePerfil);
                         HttpContext.Session.SetString("Token", datosApi.Token);
+                        HttpContext.Session.SetInt32("ConsecutivoPerfil", datosApi.ConsecutivoPerfil);
 
                         return RedirectToAction("Principal", "Home");
                     }
