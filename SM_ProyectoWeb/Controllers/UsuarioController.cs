@@ -2,6 +2,7 @@
 using SM_ProyectoWeb.Models;
 using System.Net.Http.Headers;
 using Utiles;
+using static System.Net.Mime.MediaTypeNames;
 
 namespace SM_ProyectoWeb.Controllers
 {
@@ -42,32 +43,34 @@ namespace SM_ProyectoWeb.Controllers
             }
         }
 
-        //[HttpPost]
-        //public IActionResult Empresa(UsuarioModel usuario)
-        //{
-        //    ViewBag.Mensaje = "La información no se ha actualizado correctamente";
-        //    usuario.ConsecutivoUsuario = (int)HttpContext.Session.GetInt32("ConsecutivoUsuario")!;
+        [HttpPost]
+        public IActionResult Empresa(UsuarioModel usuario, IFormFile ImagenComercial)
+        {
+            usuario.ImagenComercial = "/empresas/";
 
-        //    using (var context = _factory.CreateClient())
-        //    {
-        //        var urlApi = _configuration["Valores:UrlAPI"] + "Usuario/ActualizarPerfil";
-        //        context.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", HttpContext.Session.GetString("Token"));
-        //        var resultado = context.PutAsJsonAsync(urlApi, usuario).Result;
+            ViewBag.Mensaje = "La información no se ha actualizado correctamente";
+            usuario.ConsecutivoUsuario = (int)HttpContext.Session.GetInt32("ConsecutivoUsuario")!;
 
-        //        if (resultado.IsSuccessStatusCode)
-        //        {
-        //            var datosApi = resultado.Content.ReadFromJsonAsync<int>().Result;
+            using (var context = _factory.CreateClient())
+            {
+                var urlApi = _configuration["Valores:UrlAPI"] + "Usuario/ActualizarEmpresa";
+                context.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", HttpContext.Session.GetString("Token"));
+                var resultado = context.PutAsJsonAsync(urlApi, usuario).Result;
 
-        //            if (datosApi > 0)
-        //            {
-        //                HttpContext.Session.SetString("NombreUsuario", usuario.Nombre);
-        //                ViewBag.Mensaje = "La información se ha actualizado correctamente";
-        //            }
-        //        }
+                if (resultado.IsSuccessStatusCode)
+                {
+                    var datosApi = resultado.Content.ReadFromJsonAsync<int>().Result;
 
-        //        return View();
-        //    }
-        //}
+                    if (datosApi > 0)
+                    {
+                        GuardarDatosImagen(ImagenComercial, usuario.ConsecutivoUsuario);
+                        ViewBag.Mensaje = "La información se ha actualizado correctamente";
+                    }
+                }
+
+                return View(usuario);
+            }
+        }
 
         #endregion
 
@@ -162,6 +165,26 @@ namespace SM_ProyectoWeb.Controllers
         }
 
         #endregion
+
+        private void GuardarDatosImagen(IFormFile Imagen, int Consecutivo)
+        {
+            if (Imagen != null)
+            {
+                //save imagen 
+                var carpeta = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "empresas");
+
+                if (!Directory.Exists(carpeta))
+                    Directory.CreateDirectory(carpeta);
+
+                var nombreImagen = Consecutivo + ".png";
+                var carpetaFinal = Path.Combine(carpeta, nombreImagen);
+
+                using (var stream = new FileStream(carpetaFinal, FileMode.Create))
+                {
+                    Imagen.CopyTo(stream);
+                }
+            }
+        }
 
     }
 }

@@ -51,6 +51,24 @@ namespace SM_ProyectoAPI.Controllers
             }
         }
 
+
+        [HttpPut]
+        [Route("ActualizarEmpresa")]
+        public IActionResult ActualizarEmpresa(EmpresaRequestModel empresa)
+        {
+            using (var context = new SqlConnection(_configuration["ConnectionStrings:BDConnection"]))
+            {
+                var parametros = new DynamicParameters();
+                parametros.Add("@ConsecutivoUsuario", empresa.ConsecutivoUsuario);
+                parametros.Add("@NombreComercial", empresa.NombreComercial);
+                parametros.Add("@ImagenComercial", empresa.ImagenComercial);
+
+                var resultado = context.Execute("ActualizarEmpresa", parametros);
+                return Ok(resultado);
+            }
+        }
+        
+
         [HttpPut]
         [Route("ActualizarSeguridad")]
         public IActionResult ActualizarSeguridad(SeguridadRequestModel usuario)
