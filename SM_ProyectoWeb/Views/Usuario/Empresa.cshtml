@@ -23,17 +23,17 @@
                 <form id="FormEmpresa" class="mb-3" asp-action="Empresa" asp-controller="Usuario" enctype="multipart/form-data">
 
                     <div class="row align-items-center mb-3">
-                        <div class="col-10">
+                        <div class="col-9">
                             <label class="form-label">Nombre Comercial</label>
                             <input type="text" class="form-control" asp-for="NombreComercial" />
                         </div>
 
-                        <div class="col-2 text-center">
+                        <div class="col-3 text-center">
 
                             @if (Model.NombreComercial != "")
                             {
                                 <img src="@($"{Model.ImagenComercial}{Model.ConsecutivoUsuario}.png")"
-                                     width="110" height="110" />
+                                     width="150" height="130" />
                             }
                             else
                             {

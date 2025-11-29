@@ -25,6 +25,8 @@ namespace SM_ProyectoAPI.Controllers
             {
                 var parametros = new DynamicParameters();
                 parametros.Add("@ConsecutivoProducto", ConsecutivoProducto);
+                parametros.Add("@ConsecutivoUsuario", HttpContext.User.FindFirst("userId")?.Value);
+
                 var resultado = context.Query<ProductoResponse>("ConsultarProductos", parametros);
 
                 return Ok(resultado);
@@ -43,6 +45,7 @@ namespace SM_ProyectoAPI.Controllers
                 parametros.Add("@Descripcion", producto.Descripcion);
                 parametros.Add("@Precio", producto.Precio);
                 parametros.Add("@Imagen", producto.Imagen);
+                parametros.Add("@ConsecutivoUsuario", HttpContext.User.FindFirst("userId")?.Value);
 
                 var resultado = context.QueryFirstOrDefault<ProductoResponse>("RegistroProductos", parametros);
                 return Ok(resultado!.ConsecutivoProducto);
@@ -62,6 +65,7 @@ namespace SM_ProyectoAPI.Controllers
                 parametros.Add("@Descripcion", producto.Descripcion);
                 parametros.Add("@Precio", producto.Precio);
                 parametros.Add("@Imagen", producto.Imagen);
+                parametros.Add("@ConsecutivoUsuario", HttpContext.User.FindFirst("userId")?.Value);
 
                 var resultado = context.Execute("ActualizarProductos", parametros);
                 return Ok(resultado);
@@ -77,6 +81,7 @@ namespace SM_ProyectoAPI.Controllers
             {
                 var parametros = new DynamicParameters();
                 parametros.Add("@ConsecutivoProducto", producto.ConsecutivoProducto);
+                parametros.Add("@ConsecutivoUsuario", HttpContext.User.FindFirst("userId")?.Value);
 
                 var resultado = context.Execute("ActualizarEstadoProducto", parametros);
                 return Ok(resultado);
