@@ -35,6 +35,10 @@
                         <h6 class="card-title">Detalle: @item.Descripcion</h6>
                         <h6 class="card-title">Precio: @item.Precio.ToString("N2")</h6>
 
+                        <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#ratingModal"
+                                data-id="@item.ConsecutivoProducto">
+                            Calificar
+                        </button>
 
                     </div>
                 </div>
@@ -43,3 +47,37 @@
 
     </div>
 </div>
+
+<div class="modal fade" id="ratingModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+
+            <div class="modal-header">
+                <h5 class="modal-title">Califica este producto</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+
+            <div class="modal-body text-center">
+
+                <div id="starsContainer" style="font-size: 40px; cursor:pointer;">
+                    <span class="star" data-value="1">&#9733;</span>
+                    <span class="star" data-value="2">&#9733;</span>
+                    <span class="star" data-value="3">&#9733;</span>
+                </div>
+
+                <input type="hidden" id="ConsecutivoProducto" name="ConsecutivoProducto">
+                <p class="mt-3">Puntuación seleccionada: <strong id="ratingValue">0</strong></p>
+
+                <textarea id="comentario" class="form-control" style="resize:none" rows="5"></textarea>
+
+            </div>
+
+            <div class="modal-footer">
+                <button class="btn btn-primary" id="saveRating">Guardar</button>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<script src="~/js/ConsultarProductosEmpresa.js" asp-append-version="true"></script>

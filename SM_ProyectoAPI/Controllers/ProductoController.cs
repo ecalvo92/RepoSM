@@ -103,6 +103,24 @@ namespace SM_ProyectoAPI.Controllers
                 return Ok(resultado);
             }
         }
+
+
+        [HttpPost]
+        [Route("RegistrarCalificacion")]
+        public IActionResult RegistrarCalificacion(RegistroCalificacionRequestModel calificacion)
+        {
+            using (var context = new SqlConnection(_configuration["ConnectionStrings:BDConnection"]))
+            {
+                var parametros = new DynamicParameters();
+                parametros.Add("@ConsecutivoUsuario", HttpContext.User.FindFirst("userId")?.Value);
+                parametros.Add("@ConsecutivoProducto", calificacion.ConsecutivoProducto);
+                parametros.Add("@CantidadEstrellas", calificacion.CantidadEstrellas);
+                parametros.Add("@Comentario", calificacion.Comentario);
+
+                var resultado = context.Execute("RegistrarCalificacion", parametros);
+                return Ok(resultado);
+            }
+        }
         
     }
 }

@@ -126,6 +126,27 @@ namespace SM_ProyectoWeb.Controllers
             return View(respuesta);
         }
 
+
+        //public IActionResult RegistrarCalificacion(int pCalificacion, string pComentarios, int pConsecutivoProducto)
+        public IActionResult RegistrarCalificacion([FromBody] CalificacionModel calificacion)
+        {
+            //var calificacion = new CalificacionModel
+            //{
+            //    ConsecutivoProducto = pConsecutivoProducto,
+            //    CantidadEstrellas = pCalificacion,
+            //    Comentario = pComentarios ?? string.Empty
+            //};
+
+            using (var context = _factory.CreateClient())
+            {
+                var urlApi = _configuration["Valores:UrlAPI"] + "Producto/RegistrarCalificacion";
+                context.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", HttpContext.Session.GetString("Token"));
+                var resultado = context.PostAsJsonAsync(urlApi, calificacion).Result;
+                return Json(resultado);
+            }
+        }
+
+
         private List<ProductoModel>? ConsultarDatosProductos(int id)
         {
             using (var context = _factory.CreateClient())
