@@ -19,6 +19,7 @@ namespace SM_ProyectoWeb.Controllers
         [HttpGet]
         public IActionResult ConsultarProductos()
         {
+            //id 0 = todos los productos
             var respuesta = ConsultarDatosProductos(0);
             return View(respuesta);
         }
@@ -60,6 +61,7 @@ namespace SM_ProyectoWeb.Controllers
         [HttpGet]
         public IActionResult ActualizarProductos(int id)
         {
+            //id = el producto especifico a mostrar
             var respuesta = ConsultarDatosProductos(id);
             return View(respuesta?.FirstOrDefault());
         }
@@ -117,11 +119,38 @@ namespace SM_ProyectoWeb.Controllers
         }
 
 
+        [HttpGet]
+        public IActionResult VerProductosEmpresa(int id)
+        {
+            var respuesta = ConsultarDatosProductosEmpresa(id, 0);
+            return View(respuesta);
+        }
+
         private List<ProductoModel>? ConsultarDatosProductos(int id)
         {
             using (var context = _factory.CreateClient())
             {
                 var urlApi = _configuration["Valores:UrlAPI"] + "Producto/ConsultarProductos?ConsecutivoProducto=" + id;
+                context.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", HttpContext.Session.GetString("Token"));
+                var resultado = context.GetAsync(urlApi).Result;
+
+                if (resultado.IsSuccessStatusCode)
+                {
+                    var datosApi = resultado.Content.ReadFromJsonAsync<List<ProductoModel>>().Result;
+
+                    return datosApi;
+                }
+
+                ViewBag.Mensaje = "No hay productos registrados en este momento";
+                return new List<ProductoModel>();
+            }
+        }
+
+        private List<ProductoModel>? ConsultarDatosProductosEmpresa(int idUsuario, int idProducto)
+        {
+            using (var context = _factory.CreateClient())
+            {
+                var urlApi = _configuration["Valores:UrlAPI"] + $"Producto/ConsultarProductosEmpresa?ConsecutivoProducto={idProducto}&ConsecutivoUsuario={idUsuario}";
                 context.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", HttpContext.Session.GetString("Token"));
                 var resultado = context.GetAsync(urlApi).Result;
 

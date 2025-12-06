@@ -1,4 +1,4 @@
-﻿@model IEnumerable<UsuarioModel>
+﻿@model IEnumerable<ProductoModel>
 
 @{
     Layout = "~/Views/Shared/_LayoutInterno.cshtml";
@@ -14,7 +14,9 @@
     }
 
     <div class="card-header d-flex justify-content-between align-items-center">
-        <h4 class="m-0 flex-grow-1 text-center">Tiendas</h4>
+        <h4 class="m-0 flex-grow-1 text-center">
+            <a asp-action="Principal" asp-controller="Home"> Tiendas </a> > @Model.FirstOrDefault()!.NombreComercial
+        </h4>
     </div>
 
     <div class="card-body">
@@ -25,15 +27,14 @@
                 <div class="col-md-3 mb-4">
                     <div class="card tienda-card h-100 p-3 text-center">
 
-                        <img src="@($"{item.ImagenComercial}{item.ConsecutivoUsuario}.png")"
-                             alt="@item.NombreComercial"
+                        <img src="@($"{item.Imagen}{item.ConsecutivoProducto}.png")"
+                             alt="@item.Nombre"
                              class="img-fluid mb-3" style="object-fit:contain;" />
 
-                        <h5 class="card-title">@item.NombreComercial</h5>
-                        <h6 class="card-title">@item.Nombre</h6>
+                        <h6 class="card-title">Producto: @item.Nombre</h6>
+                        <h6 class="card-title">Detalle: @item.Descripcion</h6>
+                        <h6 class="card-title">Precio: @item.Precio.ToString("N2")</h6>
 
-                        <a asp-action="VerProductosEmpresa" asp-controller="Producto" asp-route-id="@item.ConsecutivoUsuario"
-                        class="btn btn-info mt-2">Ver Productos</a>
 
                     </div>
                 </div>

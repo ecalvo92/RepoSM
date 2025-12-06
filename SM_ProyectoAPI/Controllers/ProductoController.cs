@@ -33,6 +33,22 @@ namespace SM_ProyectoAPI.Controllers
             }
         }
 
+        [HttpGet]
+        [Route("ConsultarProductosEmpresa")]
+        public IActionResult ConsultarProductosEmpresa(int ConsecutivoProducto, int ConsecutivoUsuario)
+        {
+            using (var context = new SqlConnection(_configuration["ConnectionStrings:BDConnection"]))
+            {
+                var parametros = new DynamicParameters();
+                parametros.Add("@ConsecutivoProducto", ConsecutivoProducto);
+                parametros.Add("@ConsecutivoUsuario", ConsecutivoUsuario);
+
+                var resultado = context.Query<ProductoResponse>("ConsultarProductos", parametros);
+
+                return Ok(resultado);
+            }
+        }
+
 
         [HttpPost]
         [Route("RegistroProductos")]
