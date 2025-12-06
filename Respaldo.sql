@@ -7,6 +7,20 @@ GO
 USE [BD_SM]
 GO
 
+CREATE TABLE [dbo].[tbCalificacion](
+	[ConsecutivoCalificacion] [int] IDENTITY(1,1) NOT NULL,
+	[ConsecutivoUsuario] [int] NOT NULL,
+	[ConsecutivoProducto] [int] NOT NULL,
+	[CantidadEstrellas] [int] NOT NULL,
+	[Comentario] [varchar](500) NOT NULL,
+	[Fecha] [datetime] NOT NULL,
+ CONSTRAINT [PK_tbCalificacion] PRIMARY KEY CLUSTERED 
+(
+	[ConsecutivoCalificacion] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
+) ON [PRIMARY]
+GO
+
 CREATE TABLE [dbo].[tbError](
 	[ConsecutivoError] [int] IDENTITY(1,1) NOT NULL,
 	[ConsecutivoUsuario] [int] NOT NULL,
@@ -62,6 +76,17 @@ CREATE TABLE [dbo].[tbUsuario](
 ) ON [PRIMARY]
 GO
 
+SET IDENTITY_INSERT [dbo].[tbCalificacion] ON 
+GO
+INSERT [dbo].[tbCalificacion] ([ConsecutivoCalificacion], [ConsecutivoUsuario], [ConsecutivoProducto], [CantidadEstrellas], [Comentario], [Fecha]) VALUES (1, 5, 4, 2, N'No muestra la hora en la pantalla', CAST(N'2025-12-06T10:08:09.303' AS DateTime))
+GO
+INSERT [dbo].[tbCalificacion] ([ConsecutivoCalificacion], [ConsecutivoUsuario], [ConsecutivoProducto], [CantidadEstrellas], [Comentario], [Fecha]) VALUES (2, 5, 3, 3, N'Regalo de navidad por adelantado', CAST(N'2025-12-06T10:14:19.370' AS DateTime))
+GO
+INSERT [dbo].[tbCalificacion] ([ConsecutivoCalificacion], [ConsecutivoUsuario], [ConsecutivoProducto], [CantidadEstrellas], [Comentario], [Fecha]) VALUES (3, 5, 3, 1, N'', CAST(N'2025-12-06T10:18:26.993' AS DateTime))
+GO
+SET IDENTITY_INSERT [dbo].[tbCalificacion] OFF
+GO
+
 SET IDENTITY_INSERT [dbo].[tbError] ON 
 GO
 INSERT [dbo].[tbError] ([ConsecutivoError], [ConsecutivoUsuario], [Mensaje], [Origen], [FechaHora]) VALUES (1, 0, N'Could not find stored procedure ''ValidarUsu''.', N'/api/Home/RecuperarAcceso', CAST(N'2025-10-18T08:50:28.500' AS DateTime))
@@ -100,6 +125,18 @@ GO
 INSERT [dbo].[tbUsuario] ([ConsecutivoUsuario], [Identificacion], [Nombre], [CorreoElectronico], [Contrasenna], [Estado], [ConsecutivoPerfil], [NombreComercial], [ImagenComercial]) VALUES (5, N'304590415', N'EDUARDO JOSE CALVO CASTILLO', N'ecalvo90415@ufide.ac.cr', N'EWpuohnFbZlrlas3Gq/reg==', 1, 2, NULL, NULL)
 GO
 SET IDENTITY_INSERT [dbo].[tbUsuario] OFF
+GO
+
+ALTER TABLE [dbo].[tbCalificacion]  WITH CHECK ADD  CONSTRAINT [FK_tbCalificacion_tbProducto] FOREIGN KEY([ConsecutivoProducto])
+REFERENCES [dbo].[tbProducto] ([ConsecutivoProducto])
+GO
+ALTER TABLE [dbo].[tbCalificacion] CHECK CONSTRAINT [FK_tbCalificacion_tbProducto]
+GO
+
+ALTER TABLE [dbo].[tbCalificacion]  WITH CHECK ADD  CONSTRAINT [FK_tbCalificacion_tbUsuario] FOREIGN KEY([ConsecutivoUsuario])
+REFERENCES [dbo].[tbUsuario] ([ConsecutivoUsuario])
+GO
+ALTER TABLE [dbo].[tbCalificacion] CHECK CONSTRAINT [FK_tbCalificacion_tbUsuario]
 GO
 
 ALTER TABLE [dbo].[tbProducto]  WITH CHECK ADD  CONSTRAINT [FK_tbProducto_tbUsuario] FOREIGN KEY([ConsecutivoUsuario])
@@ -204,14 +241,16 @@ BEGIN
         SET @ConsecutivoProducto = NULL
 
     SELECT  ConsecutivoProducto,
-            Nombre,
+            P.Nombre,
             Precio,
-            Estado,
+            P.Estado,
             Imagen,
-            Descripcion
-      FROM  dbo.tbProducto
+            Descripcion,
+            NombreComercial
+      FROM  dbo.tbProducto P
+      INNER JOIN dbo.tbUsuario U ON P.ConsecutivoUsuario = U.ConsecutivoUsuario
       WHERE ConsecutivoProducto = ISNULL(@ConsecutivoProducto,ConsecutivoProducto)
-        AND ConsecutivoUsuario = @ConsecutivoUsuario
+        AND P.ConsecutivoUsuario = @ConsecutivoUsuario
 
 END
 GO
@@ -257,6 +296,20 @@ BEGIN
       INNER JOIN dbo.tbPerfil P ON U.ConsecutivoPerfil = P.ConsecutivoPerfil
       WHERE Estado = 1
         AND U.ConsecutivoPerfil = 1
+
+END
+GO
+
+CREATE PROCEDURE [dbo].[RegistrarCalificacion]
+	@ConsecutivoUsuario INT, 
+    @ConsecutivoProducto INT, 
+    @CantidadEstrellas INT, 
+    @Comentario VARCHAR(500)
+AS
+BEGIN
+
+    INSERT INTO dbo.tbCalificacion (ConsecutivoUsuario,ConsecutivoProducto,CantidadEstrellas,Comentario,Fecha)
+    VALUES (@ConsecutivoUsuario, @ConsecutivoProducto, @CantidadEstrellas, @Comentario, GETDATE())
 
 END
 GO
