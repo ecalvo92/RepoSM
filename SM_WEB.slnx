@@ -1,0 +1,4 @@
+<Solution>
+  <Project Path="SM_API/SM_API.csproj" Id="a833bc07-6204-45b5-abeb-1e0277bdd26b" />
+  <Project Path="SM_WEB/SM_WEB.csproj" />
+</Solution>
