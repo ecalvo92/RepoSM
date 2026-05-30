@@ -1,12 +1,16 @@
-﻿<div class="row h-100">
+﻿@{
+    Layout = "_LayoutExterno";
+}
+
+<div class="row h-100">
     <div class="col-lg-6 col-12">
         <div id="auth-left">
             <div class="auth-logo">
-                <a href="index.html"><img src="~/images/logo-fidelitas.png" alt="Logo"></a>
+                <a asp-action="Index" asp-controller="Home"><img src="~/images/logo-fidelitas.png" alt="Logo"></a>
             </div>
             <h1 class="auth-title">Iniciar Sesión</h1>
 
-            <form action="index.html">
+            <form>
                 <div class="form-group position-relative has-icon-left mb-4">
                     <input type="text" class="form-control form-control-xl" placeholder="Correo Electrónico">
                     <div class="form-control-icon">
@@ -19,22 +23,26 @@
                         <i class="bi bi-shield-lock"></i>
                     </div>
                 </div>
-               
+
                 <button class="btn btn-primary btn-block btn-lg shadow-lg mt-1">Procesar</button>
             </form>
             <div class="text-center mt-5 text-lg fs-4">
                 <p class="text-gray-600">
-                    ¿No tiene una cuenta? <a href="auth-register.html"
-                                          class="font-bold">
-                    Registrar Usuario
+                    ¿No tiene una cuenta? 
+                    <a asp-action="Registro" asp-controller="Home" class="font-bold">
+                      Registrar Usuario
+                    </a>
+              </p>
+              <p>
+                <a class="font-bold" asp-action="RecuperarAcceso" asp-controller="Home">
+                  ¿Olvidó su contraseña?
                 </a>
-            </p>
-            <p><a class="font-bold" href="auth-forgot-password.html">¿Olvidó su contraseña?</a></p>
-        </div>
-    </div>
-</div>
-<div class="col-lg-6 d-none d-lg-block">
-    <div id="auth-right">
-    </div>
-</div>
+              </p>
+          </div>
+      </div>
+  </div>
+  <div class="col-lg-6 d-none d-lg-block">
+      <div id="auth-right">
+      </div>
+  </div>
 </div>
