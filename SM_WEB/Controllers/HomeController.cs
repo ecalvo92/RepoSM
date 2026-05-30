@@ -33,5 +33,10 @@ namespace SM_WEB.Controllers
         {
             return View();
         }
+
+        public IActionResult Principal()
+        {
+            return View();
+        }
     }
 }
