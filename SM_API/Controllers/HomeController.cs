@@ -1,5 +1,7 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Dapper;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Data.SqlClient;
 using SM_API.Models;
 
 namespace SM_API.Controllers
@@ -11,6 +13,15 @@ namespace SM_API.Controllers
         [HttpPost("RegistroAPI")]
         public IActionResult RegistroAPI(UsuarioModel model)
         {
+            using var context = new SqlConnection("Server=localhost\\MSSQLSERVER01; Database=SM_BD; Integrated Security=True; TrustServerCertificate=True;");
+
+            var parameters = new DynamicParameters();
+            parameters.Add("@Identificacion", model.Identificacion);
+            parameters.Add("@Nombre", model.Nombre);
+            parameters.Add("@CorreoElectronico", model.CorreoElectronico);
+            parameters.Add("@Contrasenna", model.Contrasenna);
+
+            var response = context.Execute("spRegistrarUsuario", parameters);
             return Ok();
         }
 
