@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using SM_API.Models;
 
 namespace SM_API.Controllers
 {
@@ -8,7 +9,7 @@ namespace SM_API.Controllers
     public class HomeController : ControllerBase
     {
         [HttpPost("RegistroAPI")]
-        public IActionResult RegistroAPI()
+        public IActionResult RegistroAPI(UsuarioModel model)
         {
             return Ok();
         }
