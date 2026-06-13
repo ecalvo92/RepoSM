@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
 using SM_WEB.Models;
 using System.Diagnostics;
+using System.Net;
 
 namespace SM_WEB.Controllers
 {
@@ -20,7 +21,22 @@ namespace SM_WEB.Controllers
         [HttpPost]
         public IActionResult Index(UsuarioModel model)
         {
-            return View();
+            using var client = _http.CreateClient();
+
+            var urlApi = _config["Valores:UrlApi"] + "Home/IniciarSesionAPI";
+            var response = client.PostAsJsonAsync(urlApi, model).Result;
+
+            if (response.StatusCode == HttpStatusCode.OK)
+            {
+                return RedirectToAction("Principal", "Home");
+            }
+            else if (response.StatusCode == HttpStatusCode.NotFound)
+            {
+                //Agregar un mensaje
+                return View();
+            }
+
+            throw new Exception("Ocurrió un error al intentar iniciar sesión.");
         }
 
         #endregion
