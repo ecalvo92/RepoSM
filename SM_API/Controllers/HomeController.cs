@@ -47,6 +47,5 @@ namespace SM_API.Controllers
             return NotFound("La información no se pudo validar correctamente");
         }
 
-
     }
 }

@@ -58,7 +58,6 @@ namespace SM_WEB.Controllers
         public IActionResult Registro(UsuarioModel model)
         {
             using var client = _http.CreateClient();
-
             var urlApi = _config["Valores:UrlApi"] + "Home/RegistroAPI";
             var response = client.PostAsJsonAsync(urlApi, model).Result;
 

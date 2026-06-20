@@ -1,8 +1,9 @@
-﻿$.validator.addMethod("caracterEspecial", function (value) {
-  return /[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]/.test(value);
-}, "");
+﻿$(function () {
 
-$(document).ready(function () {
+  $.validator.addMethod("caracterEspecial", function (value, element) {
+    return this.optional(element) || /[!@#$%^&*(),.?":{}|<>]/.test(value);
+  }, "");
+
   $("#RegistroForm").validate({
     rules: {
       Identificacion: {
@@ -23,31 +24,35 @@ $(document).ready(function () {
     },
     messages: {
       Identificacion: {
-        required: "Campo obligatorio."
+        required: "Campo obligatorio"
       },
       Nombre: {
-        required: "Campo obligatorio."
+        required: "Campo obligatorio"
       },
       CorreoElectronico: {
-        required: "Campo obligatorio.",
-        email: "Formato no válido."
+        required: "Campo obligatorio",
+        email: "Formato no válido"
       },
       Contrasenna: {
-        required: "Campo obligatorio.",
-        minlength: "Mínimo 5 caracteres.",
-        caracterEspecial: "Al menos 1 carácter especial."
+        required: "Campo obligatorio",
+        minlength: "Mínimo 6 caracteres",
+        caracterEspecial: "Al menos 1 caracter especial"
       }
     },
     errorElement: "span",
     errorPlacement: function (error, element) {
-      error.addClass("text-danger small");
-      error.insertAfter(element.closest(".form-group"));
+      error.addClass("text-danger small d-block");
+      element.closest(".form-group").after(error);
     },
     highlight: function (element) {
-      $(element).addClass("is-invalid").removeClass("is-valid");
+      $(element).addClass("is-invalid");
     },
     unhighlight: function (element) {
       $(element).removeClass("is-invalid").addClass("is-valid");
+    },
+    submitHandler: function (form) {
+      form.submit();
     }
   });
+
 });

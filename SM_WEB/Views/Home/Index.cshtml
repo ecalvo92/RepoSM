@@ -1,5 +1,4 @@
 ﻿@model UsuarioModel
-
 @{
     Layout = "_LayoutExterno";
 }
@@ -13,19 +12,21 @@
 
             @if (ViewBag.Mensaje != null)
             { 
-                <div class="alert alert-danger text-center">@ViewBag.Mensaje</div>
+                <div class="alert alert-danger text-center">
+                  @ViewBag.Mensaje
+                  </div>
             }
 
             <h1 class="auth-title">Iniciar Sesión</h1>
 
             <form id="IndexForm" asp-action="Index" asp-controller="Home" method="post">
+                
                 <div class="form-group position-relative has-icon-left">
                     <input asp-for="CorreoElectronico" type="text" class="form-control form-control-xl" placeholder="Correo Electrónico">
                     <div class="form-control-icon">
                         <i class="bi bi-envelope"></i>
                     </div>
                 </div>
-
                 <div class="form-group position-relative has-icon-left">
                     <input asp-for="Contrasenna" type="password" class="form-control form-control-xl" placeholder="Contraseña">
                     <div class="form-control-icon">
@@ -38,8 +39,7 @@
 
             <div class="text-center mt-5 text-lg fs-4">
                 <p class="text-gray-600">
-                    ¿No tiene una cuenta? 
-                    <a asp-action="Registro" asp-controller="Home" class="font-bold">
+                    ¿No tiene una cuenta? <a asp-action="Registro" asp-controller="Home" class="font-bold">
                       Registrar Usuario
                     </a>
               </p>
