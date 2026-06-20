@@ -21,8 +21,12 @@ namespace SM_API.Controllers
             parameters.Add("@CorreoElectronico", model.CorreoElectronico);
             parameters.Add("@Contrasenna", model.Contrasenna);
 
-            context.Execute("spRegistrarUsuario", parameters);
-            return Ok();
+            var response = context.Execute("spRegistrarUsuario", parameters);
+
+            if(response > 0)
+                return Ok(response);
+
+            return BadRequest("La información no se pudo registrar correctamente");
         }
 
 
