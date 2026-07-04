@@ -33,6 +33,9 @@ namespace SM_WEB.Controllers
                 HttpContext.Session.SetString("Autenticado", "1");
                 HttpContext.Session.SetString("Nombre", datos!.Nombre);
 
+                if(datos.IndicadorTemp)
+                    return RedirectToAction("Configuracion", "Usuario");
+
                 return RedirectToAction("Principal", "Home");
             }
             else if (response.StatusCode == HttpStatusCode.NotFound)
@@ -96,7 +99,8 @@ namespace SM_WEB.Controllers
             {
                 return RedirectToAction("Index", "Home");
             }
-            else if (response.StatusCode == HttpStatusCode.NotFound)
+            else if (response.StatusCode == HttpStatusCode.NotFound 
+                  || response.StatusCode == HttpStatusCode.BadRequest)
             {
                 ViewBag.Mensaje = response.Content.ReadAsStringAsync().Result;
                 return View();
@@ -106,21 +110,6 @@ namespace SM_WEB.Controllers
         }
 
         #endregion
-
-        public IActionResult Principal()
-        {
-            return View();
-        }
-
-        public IActionResult Perfil()
-        {
-            return View();
-        }
-
-        public IActionResult Seguridad()
-        {
-            return View();
-        }
 
         #region Cerrar Sesión
 
@@ -132,6 +121,12 @@ namespace SM_WEB.Controllers
         }
 
         #endregion
+
+        [HttpGet]
+        public IActionResult Principal()
+        {
+            return View();
+        }
 
     }
 }

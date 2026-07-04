@@ -10,5 +10,6 @@ namespace SM_API.Models
         public string CorreoElectronico { get; set; } = string.Empty;
         public string Contrasenna { get; set; } = string.Empty;
         public bool Estado { get; set; }
+        public bool IndicadorTemp { get; set; }
     }
 }
