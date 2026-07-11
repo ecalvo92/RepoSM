@@ -144,9 +144,8 @@
         }
 
     .avatar img {
-        width: 32px;
-        height: 32px;
-        border-radius: 50%
+        width: 96px;
+        height: 96px;
     }
 
     .avatar .avatar-status {
@@ -160,26 +159,26 @@
     }
 
     .avatar.avatar-sm .avatar-content, .avatar.avatar-sm img {
-        width: 24px;
-        height: 24px;
+        width: 96px;
+        height: 96px;
         font-size: .8rem
     }
 
     .avatar.avatar-md .avatar-content, .avatar.avatar-md img {
-        width: 32px;
-        height: 32px;
+        width: 96px;
+        height: 96px;
         font-size: .8rem
     }
 
     .avatar.avatar-lg .avatar-content, .avatar.avatar-lg img {
-        width: 48px;
-        height: 48px;
+        width: 96px;
+        height: 96px;
         font-size: 1.2rem
     }
 
     .avatar.avatar-xl .avatar-content, .avatar.avatar-xl img {
-        width: 60px;
-        height: 60px;
+        width: 96px;
+        height: 96px;
         font-size: 1.4rem
     }
 

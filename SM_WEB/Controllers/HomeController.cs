@@ -32,8 +32,9 @@ namespace SM_WEB.Controllers
 
                 HttpContext.Session.SetString("Autenticado", "1");
                 HttpContext.Session.SetString("Nombre", datos!.Nombre);
+                HttpContext.Session.SetInt32("Consecutivo", datos!.Consecutivo);
 
-                if(datos.IndicadorTemp)
+                if (datos.IndicadorTemp)
                     return RedirectToAction("Configuracion", "Usuario");
 
                 return RedirectToAction("Principal", "Home");
