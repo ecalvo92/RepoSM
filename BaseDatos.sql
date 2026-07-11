@@ -46,6 +46,8 @@ GO
 INSERT [dbo].[tbError] ([Consecutivo], [Mensaje], [Lugar], [FechaHora], [ConsecutivoUsuario]) VALUES (4, N'Violation of UNIQUE KEY constraint ''UK_Identificacion''. Cannot insert duplicate key in object ''dbo.tbUsuario''. The duplicate key value is (402500603).
 The statement has been terminated.', N'/api/Home/RegistroAPI', CAST(N'2026-06-20T08:49:42.663' AS DateTime), 0)
 GO
+INSERT [dbo].[tbError] ([Consecutivo], [Mensaje], [Lugar], [FechaHora], [ConsecutivoUsuario]) VALUES (5, N'Could not find stored procedure ''spActualizarPerfil''.', N'/api/Usuario/CambiarPerfilAPI', CAST(N'2026-07-11T10:44:53.723' AS DateTime), 0)
+GO
 SET IDENTITY_INSERT [dbo].[tbError] OFF
 GO
 
@@ -54,6 +56,8 @@ GO
 INSERT [dbo].[tbUsuario] ([Consecutivo], [Identificacion], [Nombre], [CorreoElectronico], [Contrasenna], [Estado], [IndicadorTemp]) VALUES (1, N'304590415', N'EDUARDO JOSE CALVO CASTILLO', N'ecalvo90415@ufide.ac.cr', N'90415', 1, 0)
 GO
 INSERT [dbo].[tbUsuario] ([Consecutivo], [Identificacion], [Nombre], [CorreoElectronico], [Contrasenna], [Estado], [IndicadorTemp]) VALUES (2, N'402500603', N'LEON CORDERO ESTEFAN', N'eleon00603@ufide.ac.cr', N'1234*', 1, 0)
+GO
+INSERT [dbo].[tbUsuario] ([Consecutivo], [Identificacion], [Nombre], [CorreoElectronico], [Contrasenna], [Estado], [IndicadorTemp]) VALUES (3, N'402540724', N'JOSE DANIEL RAMIREZ AGUILAR', N'jdaniel.ramlar@gmail.com', N'40724*', 1, 0)
 GO
 SET IDENTITY_INSERT [dbo].[tbUsuario] OFF
 GO
@@ -80,6 +84,40 @@ BEGIN
     UPDATE  tbUsuario
     SET     Contrasenna = @Contrasenna,
             IndicadorTemp = @IndicadorTemp
+    WHERE   Consecutivo = @Consecutivo
+
+END
+GO
+
+CREATE PROCEDURE [dbo].[spActualizarPerfil]
+    @Consecutivo        int,
+    @Identificacion     varchar(15),
+    @Nombre             varchar(250),
+    @CorreoElectronico  varchar(100)
+AS
+BEGIN
+
+    UPDATE  tbUsuario
+    SET     Identificacion      = @Identificacion,
+            Nombre              = @Nombre,
+            CorreoElectronico   = @CorreoElectronico
+    WHERE   Consecutivo = @Consecutivo
+
+END
+GO
+
+CREATE PROCEDURE [dbo].[spConsultarUsuario]
+    @Consecutivo  int
+AS
+BEGIN
+	
+    SELECT  Consecutivo,
+            Identificacion,
+            Nombre,
+            CorreoElectronico,
+            Estado,
+            IndicadorTemp
+    FROM    dbo.tbUsuario
     WHERE   Consecutivo = @Consecutivo
 
 END
