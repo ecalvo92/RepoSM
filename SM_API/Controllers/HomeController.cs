@@ -1,8 +1,11 @@
 ﻿using Dapper;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Data.SqlClient;
+using MailKit.Net.Smtp;
+using MimeKit;
+using MimeKit.Text;
 using SM_API.Models;
+using MailKit.Security;
 
 namespace SM_API.Controllers
 {
@@ -49,7 +52,7 @@ namespace SM_API.Controllers
 
 
         [HttpPost("RecuperarAccesoAPI")]
-        public IActionResult RecuperarAccesoAPI(RecuperarAccesoRequestModel model)
+        public async Task<IActionResult> RecuperarAccesoAPI(RecuperarAccesoRequestModel model)
         {
             using var context = new SqlConnection(_config["ConnectionStrings:DefaultConnection"]);
 
@@ -74,6 +77,13 @@ namespace SM_API.Controllers
             if (actualizacion > 0)
             {
                 //Enviar un correo electrónico con la nueva contraseña temporal
+                string ruta = Path.Combine(AppContext.BaseDirectory, "Templates", "RecuperarAcceso.html");
+                string plantilla = System.IO.File.ReadAllText(ruta);
+
+                plantilla = plantilla.Replace("{{NOMBRE}}", response.Nombre);
+                plantilla = plantilla.Replace("{{TEMPORAL}}", temporal);
+
+                await EnviarCorreoAsync(response.CorreoElectronico, "Recuperación de acceso", plantilla);
                 return Ok(response);
             }
 
@@ -90,6 +100,31 @@ namespace SM_API.Controllers
                 chars[i] = caracteres[random.Next(caracteres.Length)];
 
             return new string(chars);
+        }
+
+        private async Task EnviarCorreoAsync(string destinatario, string asunto, string cuerpoHtml)
+        {
+            var mensaje = new MimeMessage();
+            var correo = _config["Correos:Correo"]!;
+            var appPassword = _config["Correos:AppPassword"]!;
+
+            if (string.IsNullOrEmpty(appPassword))
+                return;
+
+            mensaje.From.Add(new MailboxAddress(string.Empty, correo));
+            mensaje.To.Add(MailboxAddress.Parse(destinatario));
+            mensaje.Subject = asunto;
+
+            mensaje.Body = new TextPart(TextFormat.Html)
+            {
+                Text = cuerpoHtml
+            };
+
+            using var cliente = new SmtpClient();
+            await cliente.ConnectAsync("smtp.gmail.com", 587, SecureSocketOptions.StartTls);
+            await cliente.AuthenticateAsync(correo, appPassword);
+            await cliente.SendAsync(mensaje);
+            await cliente.DisconnectAsync(true);
         }
 
     }
