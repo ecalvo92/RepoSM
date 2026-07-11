@@ -11,6 +11,24 @@ namespace SM_API.Controllers
     public class UsuarioController(IConfiguration _config) : ControllerBase
     {
 
+        [HttpGet("ConsultarUsuarioAPI")]
+        public IActionResult ConsultarUsuarioAPI(int Consecutivo)
+        {
+            using var context = new SqlConnection(_config["ConnectionStrings:DefaultConnection"]);
+
+            var parameters = new DynamicParameters();
+            parameters.Add("@Consecutivo", Consecutivo);
+
+            var response = context.QueryFirstOrDefault<DatosUsuarioResponseModel>("spConsultarUsuario", parameters);
+
+            if (response != null)
+            {
+                return Ok(response);
+            }
+
+            return NotFound("El usuario no se pudo encontrar.");
+        }
+
         [HttpPut("CambiarContrasennaAPI")]
         public IActionResult CambiarContrasennaAPI(CambiarAccesoRequestModel model)
         {
@@ -25,11 +43,31 @@ namespace SM_API.Controllers
 
             if (actualizacion > 0)
             {
-                //Enviar un correo electrónico con la nueva contraseña temporal
                 return Ok(actualizacion);
             }
 
             return BadRequest("La contraseña no se pudo actualizar correctamente.");
+        }
+
+        [HttpPut("CambiarPerfilAPI")]
+        public IActionResult CambiarPerfilAPI(CambiarPerfilRequestModel model)
+        {
+            using var context = new SqlConnection(_config["ConnectionStrings:DefaultConnection"]);
+
+            var parameters = new DynamicParameters();
+            parameters.Add("@Consecutivo", model.Consecutivo);
+            parameters.Add("@Identificacion", model.Identificacion);
+            parameters.Add("@Nombre", model.Nombre);
+            parameters.Add("@CorreoElectronico", model.CorreoElectronico);
+
+            var actualizacion = context.Execute("spActualizarPerfil", parameters);
+
+            if (actualizacion > 0)
+            {
+                return Ok("Sus datos se han actualizado correctamente");
+            }
+
+            return BadRequest("Su información no se pudo actualizar correctamente.");
         }
 
     }

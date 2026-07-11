@@ -9,12 +9,24 @@ namespace SM_WEB.Controllers
         IHttpClientFactory _http,
         IConfiguration _config) : Controller
     {
-        #region Cambiar Contraseña
+        #region Cambiar Contraseña y Perfil
 
         [HttpGet]
         public IActionResult Configuracion()
         {
-            return View();
+            var consecutivo = HttpContext.Session.GetInt32("Consecutivo")!.Value;
+            using var client = _http.CreateClient();
+
+            var urlApi = _config["Valores:UrlApi"] + "Usuario/ConsultarUsuarioAPI?Consecutivo=" + consecutivo;
+            var response = client.GetAsync(urlApi).Result;
+
+            if (response.StatusCode == HttpStatusCode.OK)
+            {
+                var datos = response.Content.ReadFromJsonAsync<UsuarioModel>().Result;
+                return View(datos);
+            }
+
+            throw new Exception("Ocurrió un error al intentar cambiar su contraseña de acceso.");
         }
 
         [HttpPost]
@@ -33,11 +45,31 @@ namespace SM_WEB.Controllers
             }
             else if (response.StatusCode == HttpStatusCode.BadRequest)
             {
-                ViewBag.Mensaje = response.Content.ReadAsStringAsync().Result;
-                return View();
+                ViewBag.MensajeSeguridad = response.Content.ReadAsStringAsync().Result;
+                return View("Configuracion", model);
             }
 
             throw new Exception("Ocurrió un error al intentar cambiar su contraseña de acceso.");
+        }
+
+        [HttpPost]
+        public IActionResult CambiarPerfil(UsuarioModel model)
+        {
+            model.Consecutivo = HttpContext.Session.GetInt32("Consecutivo")!.Value;
+
+            using var client = _http.CreateClient();
+
+            var urlApi = _config["Valores:UrlApi"] + "Usuario/CambiarPerfilAPI";
+            var response = client.PutAsJsonAsync(urlApi, model).Result;
+
+            if (response.StatusCode == HttpStatusCode.OK)
+            {
+                HttpContext.Session.SetString("Nombre", model.Nombre);
+                ViewBag.MensajePerfil = response.Content.ReadAsStringAsync().Result;
+                return View("Configuracion", model);
+            }
+
+            throw new Exception("Ocurrió un error al intentar cambiar sus datos personales.");
         }
 
         #endregion
