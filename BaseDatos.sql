@@ -27,6 +27,7 @@ CREATE TABLE [dbo].[tbUsuario](
 	[CorreoElectronico] [varchar](100) NOT NULL,
 	[Contrasenna] [varchar](100) NOT NULL,
 	[Estado] [bit] NOT NULL,
+	[IndicadorTemp] [bit] NOT NULL,
  CONSTRAINT [PK_tbUsuario] PRIMARY KEY CLUSTERED 
 (
 	[Consecutivo] ASC
@@ -50,9 +51,9 @@ GO
 
 SET IDENTITY_INSERT [dbo].[tbUsuario] ON 
 GO
-INSERT [dbo].[tbUsuario] ([Consecutivo], [Identificacion], [Nombre], [CorreoElectronico], [Contrasenna], [Estado]) VALUES (1, N'304590415', N'EDUARDO JOSE CALVO CASTILLO', N'ecalvo90415@ufide.ac.cr', N'90415', 1)
+INSERT [dbo].[tbUsuario] ([Consecutivo], [Identificacion], [Nombre], [CorreoElectronico], [Contrasenna], [Estado], [IndicadorTemp]) VALUES (1, N'304590415', N'EDUARDO JOSE CALVO CASTILLO', N'ecalvo90415@ufide.ac.cr', N'90415', 1, 0)
 GO
-INSERT [dbo].[tbUsuario] ([Consecutivo], [Identificacion], [Nombre], [CorreoElectronico], [Contrasenna], [Estado]) VALUES (2, N'402500603', N'LEON CORDERO ESTEFAN', N'eleon00603@ufide.ac.cr', N'00603', 1)
+INSERT [dbo].[tbUsuario] ([Consecutivo], [Identificacion], [Nombre], [CorreoElectronico], [Contrasenna], [Estado], [IndicadorTemp]) VALUES (2, N'402500603', N'LEON CORDERO ESTEFAN', N'eleon00603@ufide.ac.cr', N'1234*', 1, 0)
 GO
 SET IDENTITY_INSERT [dbo].[tbUsuario] OFF
 GO
@@ -69,6 +70,21 @@ ALTER TABLE [dbo].[tbUsuario] ADD  CONSTRAINT [UK_Identificacion] UNIQUE NONCLUS
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, SORT_IN_TEMPDB = OFF, IGNORE_DUP_KEY = OFF, ONLINE = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
 GO
 
+CREATE PROCEDURE [dbo].[spActualizarContrasenna]
+    @Consecutivo    int,
+    @Contrasenna    varchar(100),
+    @IndicadorTemp  bit
+AS
+BEGIN
+
+    UPDATE  tbUsuario
+    SET     Contrasenna = @Contrasenna,
+            IndicadorTemp = @IndicadorTemp
+    WHERE   Consecutivo = @Consecutivo
+
+END
+GO
+
 CREATE PROCEDURE [dbo].[spIniciarSesionUsuario]
     @CorreoElectronico  varchar(100),
     @Contrasenna        varchar(100)
@@ -79,7 +95,8 @@ BEGIN
             Identificacion,
             Nombre,
             CorreoElectronico,
-            Estado
+            Estado,
+            IndicadorTemp
     FROM    dbo.tbUsuario
     WHERE   CorreoElectronico = @CorreoElectronico
         AND Contrasenna = @Contrasenna
@@ -116,10 +133,29 @@ BEGIN
     BEGIN
 	
         DECLARE @Estado BIT = 1
+        DECLARE @ClaveTemp BIT = 0
 
-        INSERT INTO dbo.tbUsuario (Identificacion,Nombre,CorreoElectronico,Contrasenna,Estado)
-        VALUES (@Identificacion,@Nombre,@CorreoElectronico,@Contrasenna,@Estado)
+        INSERT INTO dbo.tbUsuario (Identificacion,Nombre,CorreoElectronico,Contrasenna,Estado,IndicadorTemp)
+        VALUES (@Identificacion,@Nombre,@CorreoElectronico,@Contrasenna,@Estado,@ClaveTemp)
 
     END
+END
+GO
+
+CREATE PROCEDURE [dbo].[spValidarCorreo]
+    @CorreoElectronico  varchar(100)
+AS
+BEGIN
+	
+    SELECT  Consecutivo,
+            Identificacion,
+            Nombre,
+            CorreoElectronico,
+            Estado,
+            IndicadorTemp
+    FROM    dbo.tbUsuario
+    WHERE   CorreoElectronico = @CorreoElectronico
+        AND Estado = 1
+
 END
 GO
