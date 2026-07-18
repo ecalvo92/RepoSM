@@ -20,6 +20,16 @@ CREATE TABLE [dbo].[tbError](
 ) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
 GO
 
+CREATE TABLE [dbo].[tbRol](
+	[Consecutivo] [int] IDENTITY(1,1) NOT NULL,
+	[Nombre] [varchar](50) NOT NULL,
+ CONSTRAINT [PK_tbRol] PRIMARY KEY CLUSTERED 
+(
+	[Consecutivo] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
+) ON [PRIMARY]
+GO
+
 CREATE TABLE [dbo].[tbUsuario](
 	[Consecutivo] [int] IDENTITY(1,1) NOT NULL,
 	[Identificacion] [varchar](15) NOT NULL,
@@ -28,6 +38,7 @@ CREATE TABLE [dbo].[tbUsuario](
 	[Contrasenna] [varchar](100) NOT NULL,
 	[Estado] [bit] NOT NULL,
 	[IndicadorTemp] [bit] NOT NULL,
+	[ConsecutivoRol] [int] NOT NULL,
  CONSTRAINT [PK_tbUsuario] PRIMARY KEY CLUSTERED 
 (
 	[Consecutivo] ASC
@@ -51,13 +62,22 @@ GO
 SET IDENTITY_INSERT [dbo].[tbError] OFF
 GO
 
+SET IDENTITY_INSERT [dbo].[tbRol] ON 
+GO
+INSERT [dbo].[tbRol] ([Consecutivo], [Nombre]) VALUES (1, N'Usuario')
+GO
+INSERT [dbo].[tbRol] ([Consecutivo], [Nombre]) VALUES (2, N'Administrador')
+GO
+SET IDENTITY_INSERT [dbo].[tbRol] OFF
+GO
+
 SET IDENTITY_INSERT [dbo].[tbUsuario] ON 
 GO
-INSERT [dbo].[tbUsuario] ([Consecutivo], [Identificacion], [Nombre], [CorreoElectronico], [Contrasenna], [Estado], [IndicadorTemp]) VALUES (1, N'304590415', N'EDUARDO JOSE CALVO CASTILLO', N'ecalvo90415@ufide.ac.cr', N'90415', 1, 0)
+INSERT [dbo].[tbUsuario] ([Consecutivo], [Identificacion], [Nombre], [CorreoElectronico], [Contrasenna], [Estado], [IndicadorTemp], [ConsecutivoRol]) VALUES (4, N'304590415', N'EDUARDO JOSE CALVO CASTILLO', N'ecalvo90415@ufide.ac.cr', N'$2a$11$dUmKzo753u0eXVTsXhJx.ee7VSPco6n.EPyEtKtuxig6.ayZwknzK', 1, 0, 2)
 GO
-INSERT [dbo].[tbUsuario] ([Consecutivo], [Identificacion], [Nombre], [CorreoElectronico], [Contrasenna], [Estado], [IndicadorTemp]) VALUES (2, N'402500603', N'LEON CORDERO ESTEFAN', N'eleon00603@ufide.ac.cr', N'1234*', 1, 0)
+INSERT [dbo].[tbUsuario] ([Consecutivo], [Identificacion], [Nombre], [CorreoElectronico], [Contrasenna], [Estado], [IndicadorTemp], [ConsecutivoRol]) VALUES (5, N'402500603', N' ESTEFAN LEON CORDERO', N'eleon00603@ufide.ac.cr', N'$2a$11$vnpo38WOufW6Ue6t43Fw3u5t3XjAH5kr9TNh.tzZvcUhcNwZIXO5y', 1, 0, 1)
 GO
-INSERT [dbo].[tbUsuario] ([Consecutivo], [Identificacion], [Nombre], [CorreoElectronico], [Contrasenna], [Estado], [IndicadorTemp]) VALUES (3, N'402540724', N'JOSE DANIEL RAMIREZ AGUILAR', N'jdaniel.ramlar@gmail.com', N'40724*', 1, 0)
+INSERT [dbo].[tbUsuario] ([Consecutivo], [Identificacion], [Nombre], [CorreoElectronico], [Contrasenna], [Estado], [IndicadorTemp], [ConsecutivoRol]) VALUES (6, N'402540724', N'JOSE DANIEL RAMIREZ AGUILAR', N'jdaniel.ramlar@gmail.com', N'$2a$11$pUkuE34EC3rY5QhnQb54T.1G1SiHWskaBsgRjCe9n7rW.ex3w3yHK', 1, 0, 1)
 GO
 SET IDENTITY_INSERT [dbo].[tbUsuario] OFF
 GO
@@ -72,6 +92,12 @@ ALTER TABLE [dbo].[tbUsuario] ADD  CONSTRAINT [UK_Identificacion] UNIQUE NONCLUS
 (
 	[Identificacion] ASC
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, SORT_IN_TEMPDB = OFF, IGNORE_DUP_KEY = OFF, ONLINE = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
+GO
+
+ALTER TABLE [dbo].[tbUsuario]  WITH CHECK ADD  CONSTRAINT [FK_tbUsuario_tbRol] FOREIGN KEY([ConsecutivoRol])
+REFERENCES [dbo].[tbRol] ([Consecutivo])
+GO
+ALTER TABLE [dbo].[tbUsuario] CHECK CONSTRAINT [FK_tbUsuario_tbRol]
 GO
 
 CREATE PROCEDURE [dbo].[spActualizarContrasenna]
@@ -129,15 +155,19 @@ CREATE PROCEDURE [dbo].[spIniciarSesionUsuario]
 AS
 BEGIN
 	
-    SELECT  Consecutivo,
+    SELECT  U.Consecutivo,
             Identificacion,
-            Nombre,
+            U.Nombre,
             CorreoElectronico,
             Estado,
-            IndicadorTemp
-    FROM    dbo.tbUsuario
+            IndicadorTemp,
+            Contrasenna,
+            ConsecutivoRol,
+            R.Nombre 'NombreRol'
+    FROM    dbo.tbUsuario U
+    INNER JOIN dbo.tbRol R ON U.ConsecutivoRol = R.Consecutivo
     WHERE   CorreoElectronico = @CorreoElectronico
-        AND Contrasenna = @Contrasenna
+        --AND Contrasenna = @Contrasenna
         AND Estado = 1
 
 END
@@ -172,9 +202,10 @@ BEGIN
 	
         DECLARE @Estado BIT = 1
         DECLARE @ClaveTemp BIT = 0
+        DECLARE @Rol INT = 1
 
-        INSERT INTO dbo.tbUsuario (Identificacion,Nombre,CorreoElectronico,Contrasenna,Estado,IndicadorTemp)
-        VALUES (@Identificacion,@Nombre,@CorreoElectronico,@Contrasenna,@Estado,@ClaveTemp)
+        INSERT INTO dbo.tbUsuario (Identificacion,Nombre,CorreoElectronico,Contrasenna,Estado,IndicadorTemp,ConsecutivoRol)
+        VALUES (@Identificacion,@Nombre,@CorreoElectronico,@Contrasenna,@Estado,@ClaveTemp,@Rol)
 
     END
 END
