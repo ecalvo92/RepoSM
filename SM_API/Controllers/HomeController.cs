@@ -1,4 +1,5 @@
 ﻿using Dapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Data.SqlClient;
 using SM_API.Models;
@@ -6,6 +7,7 @@ using SM_API.Services;
 
 namespace SM_API.Controllers
 {
+    [AllowAnonymous]
     [Route("api/[controller]")]
     [ApiController]
     public class HomeController(IConfiguration _config, IUtilesService _utiles) : ControllerBase
@@ -41,8 +43,11 @@ namespace SM_API.Controllers
 
             var response = context.QueryFirstOrDefault<DatosUsuarioResponseModel>("spIniciarSesionUsuario", parameters);
 
-            if(response != null && BCrypt.Net.BCrypt.Verify(model.Contrasenna, response.Contrasenna))
+            if (response != null && BCrypt.Net.BCrypt.Verify(model.Contrasenna, response.Contrasenna))
+            {
+                response.Token = _utiles.GenerarToken(response.Consecutivo);
                 return Ok(response);
+            }
 
             return NotFound("La información no se pudo validar correctamente");
         }

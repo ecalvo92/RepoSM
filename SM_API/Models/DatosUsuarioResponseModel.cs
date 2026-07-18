@@ -11,5 +11,6 @@ namespace SM_API.Models
         public string Contrasenna { get; set; } = string.Empty;
         public bool Estado { get; set; }
         public bool IndicadorTemp { get; set; }
+        public string Token { get; set; } = string.Empty;
     }
 }

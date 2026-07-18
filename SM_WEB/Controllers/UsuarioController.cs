@@ -18,6 +18,7 @@ namespace SM_WEB.Controllers
             var consecutivo = HttpContext.Session.GetInt32("Consecutivo")!.Value;
             using var client = _http.CreateClient();
 
+            client.DefaultRequestHeaders.Add("Authorization", "Bearer " + HttpContext.Session.GetString("Token"));
             var urlApi = _config["Valores:UrlApi"] + "Usuario/ConsultarUsuarioAPI?Consecutivo=" + consecutivo;
             var response = client.GetAsync(urlApi).Result;
 
@@ -25,6 +26,10 @@ namespace SM_WEB.Controllers
             {
                 var datos = response.Content.ReadFromJsonAsync<UsuarioModel>().Result;
                 return View(datos);
+            }
+            else if (response.StatusCode == HttpStatusCode.Unauthorized)
+            {
+                return RedirectToAction("Salir", "Home");
             }
 
             throw new Exception("Ocurrió un error al intentar cambiar su contraseña de acceso.");
@@ -39,6 +44,7 @@ namespace SM_WEB.Controllers
 
             using var client = _http.CreateClient();
 
+            client.DefaultRequestHeaders.Add("Authorization", "Bearer " + HttpContext.Session.GetString("Token"));
             var urlApi = _config["Valores:UrlApi"] + "Usuario/CambiarContrasennaAPI";
             var response = client.PutAsJsonAsync(urlApi, model).Result;
 
@@ -52,6 +58,10 @@ namespace SM_WEB.Controllers
                 ViewBag.ClaseMensajeSeguridad = "danger";
                 return View("Configuracion", model);
             }
+            else if (response.StatusCode == HttpStatusCode.Unauthorized)
+            {
+                return RedirectToAction("Salir", "Home");
+            }
 
             throw new Exception("Ocurrió un error al intentar cambiar su contraseña de acceso.");
         }
@@ -63,6 +73,7 @@ namespace SM_WEB.Controllers
 
             using var client = _http.CreateClient();
 
+            client.DefaultRequestHeaders.Add("Authorization", "Bearer " + HttpContext.Session.GetString("Token"));
             var urlApi = _config["Valores:UrlApi"] + "Usuario/CambiarPerfilAPI";
             var response = client.PutAsJsonAsync(urlApi, model).Result;
 
@@ -78,6 +89,10 @@ namespace SM_WEB.Controllers
                 ViewBag.MensajePerfil = response.Content.ReadAsStringAsync().Result;
                 ViewBag.ClaseMensajePerfil = "danger";
                 return View("Configuracion", model);
+            }
+            else if (response.StatusCode == HttpStatusCode.Unauthorized)
+            {
+                return RedirectToAction("Salir", "Home");
             }
 
             throw new Exception("Ocurrió un error al intentar cambiar sus datos personales.");
