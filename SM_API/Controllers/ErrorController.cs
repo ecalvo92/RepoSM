@@ -1,6 +1,5 @@
 ﻿using Dapper;
 using Microsoft.AspNetCore.Diagnostics;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Data.SqlClient;
 
@@ -12,7 +11,7 @@ namespace SM_API.Controllers
     public class ErrorController(IConfiguration _config) : ControllerBase
     {
         [Route("RegistrarError")]
-        public IActionResult RegistrarError() 
+        public IActionResult RegistrarError()
         {
             var exception = HttpContext.Features.Get<IExceptionHandlerFeature>();
 

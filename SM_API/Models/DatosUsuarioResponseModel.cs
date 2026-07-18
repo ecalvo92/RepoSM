@@ -1,6 +1,4 @@
-﻿using System.ComponentModel.DataAnnotations;
-
-namespace SM_API.Models
+﻿namespace SM_API.Models
 {
     public class DatosUsuarioResponseModel
     {

@@ -1,7 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
 using SM_WEB.Filters;
 using SM_WEB.Models;
-using System.Diagnostics;
 using System.Net;
 
 namespace SM_WEB.Controllers
@@ -104,7 +103,7 @@ namespace SM_WEB.Controllers
             {
                 return RedirectToAction("Index", "Home");
             }
-            else if (response.StatusCode == HttpStatusCode.NotFound 
+            else if (response.StatusCode == HttpStatusCode.NotFound
                   || response.StatusCode == HttpStatusCode.BadRequest)
             {
                 ViewBag.Mensaje = response.Content.ReadAsStringAsync().Result;

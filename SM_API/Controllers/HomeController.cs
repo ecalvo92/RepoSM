@@ -25,7 +25,7 @@ namespace SM_API.Controllers
 
             var response = context.Execute("spRegistrarUsuario", parameters);
 
-            if(response > 0)
+            if (response > 0)
                 return Ok(response);
 
             return BadRequest("La información no se pudo registrar correctamente");
