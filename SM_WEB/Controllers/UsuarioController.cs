@@ -1,10 +1,11 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using SM_WEB.Filters;
 using SM_WEB.Models;
 using System.Net;
-using static System.Net.WebRequestMethods;
 
 namespace SM_WEB.Controllers
 {
+    [SessionAuthorize]
     public class UsuarioController(
         IHttpClientFactory _http,
         IConfiguration _config) : Controller
