@@ -32,6 +32,8 @@ namespace SM_WEB.Controllers
         [HttpPost]
         public IActionResult CambiarContrasenna(UsuarioModel model)
         {
+            model.Contrasenna = BCrypt.Net.BCrypt.HashPassword(model.Contrasenna);
+
             model.Consecutivo = HttpContext.Session.GetInt32("Consecutivo")!.Value;
 
             using var client = _http.CreateClient();

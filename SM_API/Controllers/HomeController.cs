@@ -41,7 +41,7 @@ namespace SM_API.Controllers
 
             var response = context.QueryFirstOrDefault<DatosUsuarioResponseModel>("spIniciarSesionUsuario", parameters);
 
-            if(response != null)
+            if(response != null && BCrypt.Net.BCrypt.Verify(model.Contrasenna, response.Contrasenna))
                 return Ok(response);
 
             return NotFound("La información no se pudo validar correctamente");
@@ -63,10 +63,11 @@ namespace SM_API.Controllers
 
             //Generar nueva contraseña temporal
             var temporal = _utiles.GenerarContrasena();
+            var temporalHash = BCrypt.Net.BCrypt.HashPassword(temporal);
 
             parameters = new DynamicParameters();
             parameters.Add("@Consecutivo", response.Consecutivo);
-            parameters.Add("@Contrasenna", temporal);
+            parameters.Add("@Contrasenna", temporalHash);
             parameters.Add("@IndicadorTemp", true);
 
             var actualizacion = context.Execute("spActualizarContrasenna", parameters);
