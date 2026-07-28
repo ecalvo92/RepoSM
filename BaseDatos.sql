@@ -20,6 +20,16 @@ CREATE TABLE [dbo].[tbError](
 ) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
 GO
 
+CREATE TABLE [dbo].[tbEstado](
+	[Consecutivo] [int] IDENTITY(1,1) NOT NULL,
+	[Nombre] [varchar](50) NOT NULL,
+ CONSTRAINT [PK_tbEstado] PRIMARY KEY CLUSTERED 
+(
+	[Consecutivo] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
+) ON [PRIMARY]
+GO
+
 CREATE TABLE [dbo].[tbRol](
 	[Consecutivo] [int] IDENTITY(1,1) NOT NULL,
 	[Nombre] [varchar](50) NOT NULL,
@@ -28,6 +38,22 @@ CREATE TABLE [dbo].[tbRol](
 	[Consecutivo] ASC
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
 ) ON [PRIMARY]
+GO
+
+CREATE TABLE [dbo].[tbSolicitud](
+	[Consecutivo] [int] IDENTITY(1,1) NOT NULL,
+	[Titulo] [varchar](150) NOT NULL,
+	[Descripcion] [varchar](max) NOT NULL,
+	[FechaRegistro] [datetime] NOT NULL,
+	[FechaFinalizacion] [datetime] NULL,
+	[ConsecutivoUsuario] [int] NOT NULL,
+	[ConsecutivoAdmin] [int] NOT NULL,
+	[ConsecutivoEstado] [int] NOT NULL,
+ CONSTRAINT [PK_tbSolicitud] PRIMARY KEY CLUSTERED 
+(
+	[Consecutivo] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
+) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
 GO
 
 CREATE TABLE [dbo].[tbUsuario](
@@ -46,20 +72,15 @@ CREATE TABLE [dbo].[tbUsuario](
 ) ON [PRIMARY]
 GO
 
-SET IDENTITY_INSERT [dbo].[tbError] ON 
+SET IDENTITY_INSERT [dbo].[tbEstado] ON 
 GO
-INSERT [dbo].[tbError] ([Consecutivo], [Mensaje], [Lugar], [FechaHora], [ConsecutivoUsuario]) VALUES (1, N'Procedure or function ''spRegistrarUsuario'' expects parameter ''@Contrasenna'', which was not supplied.', N'Home - RegistroAPI', CAST(N'2026-06-13T08:41:41.380' AS DateTime), 0)
+INSERT [dbo].[tbEstado] ([Consecutivo], [Nombre]) VALUES (1, N'Abierto')
 GO
-INSERT [dbo].[tbError] ([Consecutivo], [Mensaje], [Lugar], [FechaHora], [ConsecutivoUsuario]) VALUES (2, N'Procedure or function ''spRegistrarUsuario'' expects parameter ''@Contrasenna'', which was not supplied.', N'/api/Home/RegistroAPI', CAST(N'2026-06-13T08:56:41.357' AS DateTime), 0)
+INSERT [dbo].[tbEstado] ([Consecutivo], [Nombre]) VALUES (2, N'Atendido')
 GO
-INSERT [dbo].[tbError] ([Consecutivo], [Mensaje], [Lugar], [FechaHora], [ConsecutivoUsuario]) VALUES (3, N'Procedure or function ''spIniciarSesionUsuario'' expects parameter ''@CorreoElectronico'', which was not supplied.', N'/api/Home/IniciarSesionAPI', CAST(N'2026-06-13T10:44:28.530' AS DateTime), 0)
+INSERT [dbo].[tbEstado] ([Consecutivo], [Nombre]) VALUES (3, N'Cancelado')
 GO
-INSERT [dbo].[tbError] ([Consecutivo], [Mensaje], [Lugar], [FechaHora], [ConsecutivoUsuario]) VALUES (4, N'Violation of UNIQUE KEY constraint ''UK_Identificacion''. Cannot insert duplicate key in object ''dbo.tbUsuario''. The duplicate key value is (402500603).
-The statement has been terminated.', N'/api/Home/RegistroAPI', CAST(N'2026-06-20T08:49:42.663' AS DateTime), 0)
-GO
-INSERT [dbo].[tbError] ([Consecutivo], [Mensaje], [Lugar], [FechaHora], [ConsecutivoUsuario]) VALUES (5, N'Could not find stored procedure ''spActualizarPerfil''.', N'/api/Usuario/CambiarPerfilAPI', CAST(N'2026-07-11T10:44:53.723' AS DateTime), 0)
-GO
-SET IDENTITY_INSERT [dbo].[tbError] OFF
+SET IDENTITY_INSERT [dbo].[tbEstado] OFF
 GO
 
 SET IDENTITY_INSERT [dbo].[tbRol] ON 
@@ -71,13 +92,30 @@ GO
 SET IDENTITY_INSERT [dbo].[tbRol] OFF
 GO
 
+SET IDENTITY_INSERT [dbo].[tbSolicitud] ON 
+GO
+INSERT [dbo].[tbSolicitud] ([Consecutivo], [Titulo], [Descripcion], [FechaRegistro], [FechaFinalizacion], [ConsecutivoUsuario], [ConsecutivoAdmin], [ConsecutivoEstado]) VALUES (1, N'Error de internet', N'Cuando entro al navegador aparece un dinosaurio', CAST(N'2026-07-27T21:39:34.780' AS DateTime), NULL, 5, 4, 1)
+GO
+INSERT [dbo].[tbSolicitud] ([Consecutivo], [Titulo], [Descripcion], [FechaRegistro], [FechaFinalizacion], [ConsecutivoUsuario], [ConsecutivoAdmin], [ConsecutivoEstado]) VALUES (2, N'Error de internet', N'Cuando entro al navegador aparece un dinosaurio x2', CAST(N'2026-07-27T21:41:08.093' AS DateTime), NULL, 5, 4, 1)
+GO
+INSERT [dbo].[tbSolicitud] ([Consecutivo], [Titulo], [Descripcion], [FechaRegistro], [FechaFinalizacion], [ConsecutivoUsuario], [ConsecutivoAdmin], [ConsecutivoEstado]) VALUES (3, N'Error de internet', N'Cuando entro al navegador aparece un dinosaurio x3', CAST(N'2026-07-27T21:41:47.717' AS DateTime), NULL, 5, 6, 1)
+GO
+INSERT [dbo].[tbSolicitud] ([Consecutivo], [Titulo], [Descripcion], [FechaRegistro], [FechaFinalizacion], [ConsecutivoUsuario], [ConsecutivoAdmin], [ConsecutivoEstado]) VALUES (4, N'Error de internet', N'Cuando entro al navegador aparece un dinosaurio x4', CAST(N'2026-07-27T21:42:02.183' AS DateTime), NULL, 5, 6, 1)
+GO
+INSERT [dbo].[tbSolicitud] ([Consecutivo], [Titulo], [Descripcion], [FechaRegistro], [FechaFinalizacion], [ConsecutivoUsuario], [ConsecutivoAdmin], [ConsecutivoEstado]) VALUES (5, N'Error de internet', N'Cuando entro al navegador aparece un dinosaurio x5', CAST(N'2026-07-27T21:42:15.927' AS DateTime), NULL, 5, 6, 1)
+GO
+INSERT [dbo].[tbSolicitud] ([Consecutivo], [Titulo], [Descripcion], [FechaRegistro], [FechaFinalizacion], [ConsecutivoUsuario], [ConsecutivoAdmin], [ConsecutivoEstado]) VALUES (6, N'Error de internet', N'Cuando entro al navegador aparece un dinosaurio x6', CAST(N'2026-07-27T21:42:24.973' AS DateTime), NULL, 5, 4, 1)
+GO
+SET IDENTITY_INSERT [dbo].[tbSolicitud] OFF
+GO
+
 SET IDENTITY_INSERT [dbo].[tbUsuario] ON 
 GO
 INSERT [dbo].[tbUsuario] ([Consecutivo], [Identificacion], [Nombre], [CorreoElectronico], [Contrasenna], [Estado], [IndicadorTemp], [ConsecutivoRol]) VALUES (4, N'304590415', N'EDUARDO JOSE CALVO CASTILLO', N'ecalvo90415@ufide.ac.cr', N'$2a$11$dUmKzo753u0eXVTsXhJx.ee7VSPco6n.EPyEtKtuxig6.ayZwknzK', 1, 0, 2)
 GO
 INSERT [dbo].[tbUsuario] ([Consecutivo], [Identificacion], [Nombre], [CorreoElectronico], [Contrasenna], [Estado], [IndicadorTemp], [ConsecutivoRol]) VALUES (5, N'402500603', N' ESTEFAN LEON CORDERO', N'eleon00603@ufide.ac.cr', N'$2a$11$vnpo38WOufW6Ue6t43Fw3u5t3XjAH5kr9TNh.tzZvcUhcNwZIXO5y', 1, 0, 1)
 GO
-INSERT [dbo].[tbUsuario] ([Consecutivo], [Identificacion], [Nombre], [CorreoElectronico], [Contrasenna], [Estado], [IndicadorTemp], [ConsecutivoRol]) VALUES (6, N'402540724', N'JOSE DANIEL RAMIREZ AGUILAR', N'jdaniel.ramlar@gmail.com', N'$2a$11$pUkuE34EC3rY5QhnQb54T.1G1SiHWskaBsgRjCe9n7rW.ex3w3yHK', 1, 0, 1)
+INSERT [dbo].[tbUsuario] ([Consecutivo], [Identificacion], [Nombre], [CorreoElectronico], [Contrasenna], [Estado], [IndicadorTemp], [ConsecutivoRol]) VALUES (6, N'402540724', N'JOSE DANIEL RAMIREZ AGUILAR', N'jdaniel.ramlar@gmail.com', N'$2a$11$pUkuE34EC3rY5QhnQb54T.1G1SiHWskaBsgRjCe9n7rW.ex3w3yHK', 1, 0, 2)
 GO
 SET IDENTITY_INSERT [dbo].[tbUsuario] OFF
 GO
@@ -92,6 +130,24 @@ ALTER TABLE [dbo].[tbUsuario] ADD  CONSTRAINT [UK_Identificacion] UNIQUE NONCLUS
 (
 	[Identificacion] ASC
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, SORT_IN_TEMPDB = OFF, IGNORE_DUP_KEY = OFF, ONLINE = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
+GO
+
+ALTER TABLE [dbo].[tbSolicitud]  WITH CHECK ADD  CONSTRAINT [FK_tbSolicitud_Admin] FOREIGN KEY([ConsecutivoAdmin])
+REFERENCES [dbo].[tbUsuario] ([Consecutivo])
+GO
+ALTER TABLE [dbo].[tbSolicitud] CHECK CONSTRAINT [FK_tbSolicitud_Admin]
+GO
+
+ALTER TABLE [dbo].[tbSolicitud]  WITH CHECK ADD  CONSTRAINT [FK_tbSolicitud_Estado] FOREIGN KEY([ConsecutivoEstado])
+REFERENCES [dbo].[tbEstado] ([Consecutivo])
+GO
+ALTER TABLE [dbo].[tbSolicitud] CHECK CONSTRAINT [FK_tbSolicitud_Estado]
+GO
+
+ALTER TABLE [dbo].[tbSolicitud]  WITH CHECK ADD  CONSTRAINT [FK_tbSolicitud_Usuario] FOREIGN KEY([ConsecutivoUsuario])
+REFERENCES [dbo].[tbUsuario] ([Consecutivo])
+GO
+ALTER TABLE [dbo].[tbSolicitud] CHECK CONSTRAINT [FK_tbSolicitud_Usuario]
 GO
 
 ALTER TABLE [dbo].[tbUsuario]  WITH CHECK ADD  CONSTRAINT [FK_tbUsuario_tbRol] FOREIGN KEY([ConsecutivoRol])
@@ -128,6 +184,62 @@ BEGIN
             Nombre              = @Nombre,
             CorreoElectronico   = @CorreoElectronico
     WHERE   Consecutivo = @Consecutivo
+
+END
+GO
+
+CREATE PROCEDURE [dbo].[spCancelarSolicitudUsuario]
+    @ConsecutivoSolicitud   int,
+    @ConsecutivoUsuario     int
+AS
+BEGIN
+
+    UPDATE  tbSolicitud
+    SET     ConsecutivoEstado = 3,
+            FechaFinalizacion = GETDATE()
+    WHERE   Consecutivo        = @ConsecutivoSolicitud
+        AND ConsecutivoUsuario = @ConsecutivoUsuario
+        AND ConsecutivoEstado  = 1
+
+END
+GO
+
+CREATE PROCEDURE [dbo].[spConsultarSolicitud]
+    @ConsecutivoSolicitud  int
+AS
+BEGIN
+	
+    SELECT S.Consecutivo,
+           S.Titulo,
+           S.Descripcion,
+           S.FechaRegistro,
+           S.FechaFinalizacion,
+           U.Nombre 'NombreAdmin',
+           E.Nombre 'NombreEstado'
+      FROM dbo.tbSolicitud S
+      INNER JOIN dbo.tbUsuario U ON S.ConsecutivoAdmin = U.Consecutivo
+      INNER JOIN dbo.tbEstado E ON S.ConsecutivoEstado = E.Consecutivo
+      WHERE S.Consecutivo = @ConsecutivoSolicitud
+
+END
+GO
+
+CREATE PROCEDURE [dbo].[spConsultarSolicitudesUsuario]
+    @ConsecutivoUsuario  int
+AS
+BEGIN
+	
+    SELECT S.Consecutivo,
+           S.Titulo,
+           S.Descripcion,
+           S.FechaRegistro,
+           S.FechaFinalizacion,
+           U.Nombre 'NombreAdmin',
+           E.Nombre 'NombreEstado'
+      FROM dbo.tbSolicitud S
+      INNER JOIN dbo.tbUsuario U ON S.ConsecutivoAdmin = U.Consecutivo
+      INNER JOIN dbo.tbEstado E ON S.ConsecutivoEstado = E.Consecutivo
+      WHERE S.ConsecutivoUsuario = @ConsecutivoUsuario
 
 END
 GO
@@ -183,6 +295,32 @@ BEGIN
 	
     INSERT INTO dbo.tbError(Mensaje,Lugar,FechaHora,ConsecutivoUsuario)
     VALUES (@Mensaje,@Lugar,@FechaHora,@ConsecutivoUsuario)
+
+END
+GO
+
+CREATE PROCEDURE [dbo].[spRegistrarSolicitud]
+    @Titulo             varchar(150),
+    @Descripcion        varchar(max),
+    @ConsecutivoUsuario int
+AS
+BEGIN
+
+    --ADMIN CON MENOS SOLICITUDES EN COLA
+    DECLARE @ConsecutivoAdmin INT
+
+    SELECT  TOP 1 @ConsecutivoAdmin = U.Consecutivo
+    FROM    dbo.tbUsuario U
+    LEFT JOIN dbo.tbSolicitud S ON  S.ConsecutivoAdmin = U.Consecutivo
+                                AND S.ConsecutivoEstado = 1
+    WHERE   U.ConsecutivoRol = 2
+    GROUP BY U.Consecutivo
+    ORDER BY COUNT(S.Consecutivo)
+
+
+    INSERT INTO dbo.tbSolicitud(Titulo,Descripcion,FechaRegistro,FechaFinalizacion,
+                                ConsecutivoUsuario,ConsecutivoAdmin,ConsecutivoEstado)
+     VALUES(@Titulo,@Descripcion,GETDATE(),NULL,@ConsecutivoUsuario,@ConsecutivoAdmin,1)
 
 END
 GO
