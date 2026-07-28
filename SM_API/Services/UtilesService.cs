@@ -3,10 +3,11 @@ using MailKit.Security;
 using MimeKit;
 using MimeKit.Text;
 using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
 
 namespace SM_API.Services
 {
-    public class UtilesService(IConfiguration _config) : IUtilesService
+    public class UtilesService(IConfiguration _config, IHttpContextAccessor _httpContext) : IUtilesService
     {
 
         public string GenerarContrasena()
@@ -64,5 +65,12 @@ namespace SM_API.Services
             var token = tokenHandler.CreateToken(tokenDescriptor);
             return tokenHandler.WriteToken(token);
         }
+
+        public int ObtenerConsecutivoToken()
+        {
+            var valor = _httpContext.HttpContext?.User.FindFirstValue("consecutivo");
+            return int.TryParse(valor, out var id) ? id : 0;
+        }
+
     }
 }
