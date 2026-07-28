@@ -1,6 +1,5 @@
 ﻿using Dapper;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Data.SqlClient;
 using SM_API.Models;
@@ -29,6 +28,64 @@ namespace SM_API.Controllers
             if (response > 0)
             {
                 return Ok("La solicitud se ha registrado correctamente");
+            }
+
+            return BadRequest("No se ha podido registrar la solicitud");
+        }
+
+
+        [HttpGet("ConsultarSolicitudesUsuarioAPI")]
+        public IActionResult ConsultarSolicitudesUsuarioAPI()
+        {
+            using var context = new SqlConnection(_config["ConnectionStrings:DefaultConnection"]);
+
+            var parameters = new DynamicParameters();
+            parameters.Add("@ConsecutivoUsuario", _utiles.ObtenerConsecutivoToken());
+
+            var response = context.Query<SolicitudResponseModel>("spConsultarSolicitudesUsuario", parameters);
+
+            if (response.Any())
+            {
+                return Ok(response);
+            }
+
+            return NotFound("No se encontraron solicitudes");
+        }
+
+
+        [HttpGet("ConsultarSolicitudAPI")]
+        public IActionResult ConsultarSolicitudAPI(int consecutivoSolicitud)
+        {
+            using var context = new SqlConnection(_config["ConnectionStrings:DefaultConnection"]);
+
+            var parameters = new DynamicParameters();
+            parameters.Add("@ConsecutivoSolicitud", consecutivoSolicitud);
+
+            var response = context.QueryFirstOrDefault<SolicitudResponseModel>("spConsultarSolicitud", parameters);
+
+            if (response != null)
+            {
+                return Ok(response);
+            }
+
+            return NotFound("No se ha encontrado la solicitud");
+        }
+
+
+        [HttpDelete("CancelarSolicitudAPI")]
+        public IActionResult CancelarSolicitudAPI(int consecutivoSolicitud)
+        {
+            using var context = new SqlConnection(_config["ConnectionStrings:DefaultConnection"]);
+
+            var parameters = new DynamicParameters();
+            parameters.Add("@ConsecutivoSolicitud", consecutivoSolicitud);
+            parameters.Add("@ConsecutivoUsuario", _utiles.ObtenerConsecutivoToken());
+
+            var response = context.Execute("spCancelarSolicitudUsuario", parameters);
+
+            if (response > 0)
+            {
+                return Ok("La solicitud se ha cancelado correctamente");
             }
 
             return BadRequest("No se ha podido registrar la solicitud");
