@@ -49,6 +49,7 @@ CREATE TABLE [dbo].[tbSolicitud](
 	[ConsecutivoUsuario] [int] NOT NULL,
 	[ConsecutivoAdmin] [int] NOT NULL,
 	[ConsecutivoEstado] [int] NOT NULL,
+	[Solucion] [varchar](max) NULL,
  CONSTRAINT [PK_tbSolicitud] PRIMARY KEY CLUSTERED 
 (
 	[Consecutivo] ASC
@@ -94,17 +95,11 @@ GO
 
 SET IDENTITY_INSERT [dbo].[tbSolicitud] ON 
 GO
-INSERT [dbo].[tbSolicitud] ([Consecutivo], [Titulo], [Descripcion], [FechaRegistro], [FechaFinalizacion], [ConsecutivoUsuario], [ConsecutivoAdmin], [ConsecutivoEstado]) VALUES (1, N'Error de internet', N'Cuando entro al navegador aparece un dinosaurio', CAST(N'2026-07-27T21:39:34.780' AS DateTime), NULL, 5, 4, 1)
+INSERT [dbo].[tbSolicitud] ([Consecutivo], [Titulo], [Descripcion], [FechaRegistro], [FechaFinalizacion], [ConsecutivoUsuario], [ConsecutivoAdmin], [ConsecutivoEstado], [Solucion]) VALUES (8, N'Error SQL por bloqueo en actualización de registros críticos', N'Se produjo un error de SQL durante la actualización de registros debido a un bloqueo concurrente en la base de datos. La transacción fue revertida automáticamente para preservar la integridad de la información.', CAST(N'2026-08-01T10:22:04.487' AS DateTime), CAST(N'2026-08-01T10:28:33.420' AS DateTime), 5, 6, 3, N'Solicitud cancelada por el usuario')
 GO
-INSERT [dbo].[tbSolicitud] ([Consecutivo], [Titulo], [Descripcion], [FechaRegistro], [FechaFinalizacion], [ConsecutivoUsuario], [ConsecutivoAdmin], [ConsecutivoEstado]) VALUES (2, N'Error de internet', N'Cuando entro al navegador aparece un dinosaurio x2', CAST(N'2026-07-27T21:41:08.093' AS DateTime), NULL, 5, 4, 1)
+INSERT [dbo].[tbSolicitud] ([Consecutivo], [Titulo], [Descripcion], [FechaRegistro], [FechaFinalizacion], [ConsecutivoUsuario], [ConsecutivoAdmin], [ConsecutivoEstado], [Solucion]) VALUES (9, N'Error SQL por bloqueo en actualización de registros críticos', N'Error SQL por bloqueo en actualización de registros críticosError SQL por bloqueo en actualización de registros críticosError SQL por bloqueo en actualización de registros críticosError SQL por bloqueo en actualización de registros críticos', CAST(N'2026-08-01T10:44:14.773' AS DateTime), NULL, 5, 6, 1, NULL)
 GO
-INSERT [dbo].[tbSolicitud] ([Consecutivo], [Titulo], [Descripcion], [FechaRegistro], [FechaFinalizacion], [ConsecutivoUsuario], [ConsecutivoAdmin], [ConsecutivoEstado]) VALUES (3, N'Error de internet', N'Cuando entro al navegador aparece un dinosaurio x3', CAST(N'2026-07-27T21:41:47.717' AS DateTime), NULL, 5, 6, 1)
-GO
-INSERT [dbo].[tbSolicitud] ([Consecutivo], [Titulo], [Descripcion], [FechaRegistro], [FechaFinalizacion], [ConsecutivoUsuario], [ConsecutivoAdmin], [ConsecutivoEstado]) VALUES (4, N'Error de internet', N'Cuando entro al navegador aparece un dinosaurio x4', CAST(N'2026-07-27T21:42:02.183' AS DateTime), NULL, 5, 6, 1)
-GO
-INSERT [dbo].[tbSolicitud] ([Consecutivo], [Titulo], [Descripcion], [FechaRegistro], [FechaFinalizacion], [ConsecutivoUsuario], [ConsecutivoAdmin], [ConsecutivoEstado]) VALUES (5, N'Error de internet', N'Cuando entro al navegador aparece un dinosaurio x5', CAST(N'2026-07-27T21:42:15.927' AS DateTime), NULL, 5, 6, 1)
-GO
-INSERT [dbo].[tbSolicitud] ([Consecutivo], [Titulo], [Descripcion], [FechaRegistro], [FechaFinalizacion], [ConsecutivoUsuario], [ConsecutivoAdmin], [ConsecutivoEstado]) VALUES (6, N'Error de internet', N'Cuando entro al navegador aparece un dinosaurio x6', CAST(N'2026-07-27T21:42:24.973' AS DateTime), NULL, 5, 4, 1)
+INSERT [dbo].[tbSolicitud] ([Consecutivo], [Titulo], [Descripcion], [FechaRegistro], [FechaFinalizacion], [ConsecutivoUsuario], [ConsecutivoAdmin], [ConsecutivoEstado], [Solucion]) VALUES (10, N'Error SQL por bloqueo en actualización de registros críticos', N'Error SQL por bloqueo en actualización de registros críticosError SQL por bloqueo en actualización de registros críticosError SQL por bloqueo en actualización de registros críticosError SQL por bloqueo en actualización de registros críticos', CAST(N'2026-08-01T10:44:45.277' AS DateTime), NULL, 5, 4, 1, NULL)
 GO
 SET IDENTITY_INSERT [dbo].[tbSolicitud] OFF
 GO
@@ -113,9 +108,9 @@ SET IDENTITY_INSERT [dbo].[tbUsuario] ON
 GO
 INSERT [dbo].[tbUsuario] ([Consecutivo], [Identificacion], [Nombre], [CorreoElectronico], [Contrasenna], [Estado], [IndicadorTemp], [ConsecutivoRol]) VALUES (4, N'304590415', N'EDUARDO JOSE CALVO CASTILLO', N'ecalvo90415@ufide.ac.cr', N'$2a$11$dUmKzo753u0eXVTsXhJx.ee7VSPco6n.EPyEtKtuxig6.ayZwknzK', 1, 0, 2)
 GO
-INSERT [dbo].[tbUsuario] ([Consecutivo], [Identificacion], [Nombre], [CorreoElectronico], [Contrasenna], [Estado], [IndicadorTemp], [ConsecutivoRol]) VALUES (5, N'402500603', N' ESTEFAN LEON CORDERO', N'eleon00603@ufide.ac.cr', N'$2a$11$vnpo38WOufW6Ue6t43Fw3u5t3XjAH5kr9TNh.tzZvcUhcNwZIXO5y', 1, 0, 1)
+INSERT [dbo].[tbUsuario] ([Consecutivo], [Identificacion], [Nombre], [CorreoElectronico], [Contrasenna], [Estado], [IndicadorTemp], [ConsecutivoRol]) VALUES (5, N'402500603', N'ESTEFAN LEON CORDERO', N'eleon00603@ufide.ac.cr', N'$2a$11$vnpo38WOufW6Ue6t43Fw3u5t3XjAH5kr9TNh.tzZvcUhcNwZIXO5y', 1, 0, 1)
 GO
-INSERT [dbo].[tbUsuario] ([Consecutivo], [Identificacion], [Nombre], [CorreoElectronico], [Contrasenna], [Estado], [IndicadorTemp], [ConsecutivoRol]) VALUES (6, N'402540724', N'JOSE DANIEL RAMIREZ AGUILAR', N'jdaniel.ramlar@gmail.com', N'$2a$11$pUkuE34EC3rY5QhnQb54T.1G1SiHWskaBsgRjCe9n7rW.ex3w3yHK', 1, 0, 2)
+INSERT [dbo].[tbUsuario] ([Consecutivo], [Identificacion], [Nombre], [CorreoElectronico], [Contrasenna], [Estado], [IndicadorTemp], [ConsecutivoRol]) VALUES (6, N'402540724', N'JOSE DANIEL RAMIREZ AGUILAR', N'jdaniel.ramlar@gmail.com', N'$2a$11$PxNIisIVIgGQc74IBJv5beOS4O4maJaWSWNUWqQoCVITnamORjSEa', 1, 0, 2)
 GO
 SET IDENTITY_INSERT [dbo].[tbUsuario] OFF
 GO
@@ -196,7 +191,8 @@ BEGIN
 
     UPDATE  tbSolicitud
     SET     ConsecutivoEstado = 3,
-            FechaFinalizacion = GETDATE()
+            FechaFinalizacion = GETDATE(),
+            Solucion = 'Solicitud cancelada por el usuario'
     WHERE   Consecutivo        = @ConsecutivoSolicitud
         AND ConsecutivoUsuario = @ConsecutivoUsuario
         AND ConsecutivoEstado  = 1
@@ -220,6 +216,26 @@ BEGIN
       INNER JOIN dbo.tbUsuario U ON S.ConsecutivoAdmin = U.Consecutivo
       INNER JOIN dbo.tbEstado E ON S.ConsecutivoEstado = E.Consecutivo
       WHERE S.Consecutivo = @ConsecutivoSolicitud
+
+END
+GO
+
+CREATE PROCEDURE [dbo].[spConsultarSolicitudesAdmin]
+    @ConsecutivoAdmin  int
+AS
+BEGIN
+	
+    SELECT S.Consecutivo,
+           S.Titulo,
+           S.Descripcion,
+           S.FechaRegistro,
+           S.FechaFinalizacion,
+           U.Nombre 'NombreUsuario',
+           E.Nombre 'NombreEstado'
+      FROM dbo.tbSolicitud S
+      INNER JOIN dbo.tbUsuario U ON S.ConsecutivoUsuario = U.Consecutivo
+      INNER JOIN dbo.tbEstado E ON S.ConsecutivoEstado = E.Consecutivo
+      WHERE S.ConsecutivoAdmin = @ConsecutivoAdmin
 
 END
 GO
@@ -319,8 +335,10 @@ BEGIN
 
 
     INSERT INTO dbo.tbSolicitud(Titulo,Descripcion,FechaRegistro,FechaFinalizacion,
-                                ConsecutivoUsuario,ConsecutivoAdmin,ConsecutivoEstado)
-     VALUES(@Titulo,@Descripcion,GETDATE(),NULL,@ConsecutivoUsuario,@ConsecutivoAdmin,1)
+                                ConsecutivoUsuario,ConsecutivoAdmin,ConsecutivoEstado,Solucion)
+     VALUES(@Titulo,@Descripcion,GETDATE(),NULL,@ConsecutivoUsuario,@ConsecutivoAdmin,1,NULL)
+
+     SELECT SCOPE_IDENTITY() 'Consecutivo'
 
 END
 GO
