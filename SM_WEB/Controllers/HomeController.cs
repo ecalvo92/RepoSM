@@ -133,6 +133,11 @@ namespace SM_WEB.Controllers
         [HttpGet]
         public IActionResult Principal()
         {
+            if(HttpContext.Session.GetInt32("ConsecutivoRol") == 1)
+            {
+                return RedirectToAction("VerEstadoSolicitud", "Solicitud");
+            }
+
             using var client = _http.CreateClient();
 
             client.DefaultRequestHeaders.Add("Authorization", "Bearer " + HttpContext.Session.GetString("Token"));
