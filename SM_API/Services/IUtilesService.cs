@@ -6,8 +6,12 @@
 
         Task EnviarCorreoAsync(string destinatario, string asunto, string cuerpoHtml);
 
-        string GenerarToken(int consecutivo);
+        string GenerarToken(int consecutivo, int consecutivoRol, string nombre);
 
         int ObtenerConsecutivoToken();
+
+        int ObtenerConsecutivoRolToken();
+
+        string ObtenerNombreToken();
     }
 }
