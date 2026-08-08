@@ -33,5 +33,26 @@ namespace SM_API.Controllers
             return NotFound("No se han encontrado solicitudes abiertas en este momento");
         }
 
+        [HttpGet("ConsultarMensajesAPI")]
+        public IActionResult ConsultarMensajesAPI(int consecutivoSolicitud)
+        {
+            using var context = new SqlConnection(_config["ConnectionStrings:DefaultConnection"]);
+
+            var parameters = new DynamicParameters();
+            parameters.Add("@ConsecutivoSolicitud", consecutivoSolicitud);
+            parameters.Add("@ConsecutivoUsuario", _utiles.ObtenerConsecutivoToken());
+
+            var acceso = context.QuerySingle<int>("spValidarAccesoSolicitud", parameters);
+
+            if(acceso == 0)
+                return Forbid();
+
+            parameters = new DynamicParameters();
+            parameters.Add("@ConsecutivoSolicitud", consecutivoSolicitud);
+
+            var response = context.Query<MensajeResponseModel>("spConsultarMensajes", parameters);
+            return Ok(response);
+        }
+
     }
 }
