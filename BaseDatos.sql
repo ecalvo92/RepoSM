@@ -30,6 +30,19 @@ CREATE TABLE [dbo].[tbEstado](
 ) ON [PRIMARY]
 GO
 
+CREATE TABLE [dbo].[tbMensaje](
+	[Consecutivo] [int] IDENTITY(1,1) NOT NULL,
+	[Mensaje] [varchar](max) NOT NULL,
+	[FechaHora] [datetime] NOT NULL,
+	[ConsecutivoUsuario] [int] NOT NULL,
+	[ConsecutivoSolicitud] [int] NOT NULL,
+ CONSTRAINT [PK_tbMensaje] PRIMARY KEY CLUSTERED 
+(
+	[Consecutivo] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
+) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
+GO
+
 CREATE TABLE [dbo].[tbRol](
 	[Consecutivo] [int] IDENTITY(1,1) NOT NULL,
 	[Nombre] [varchar](50) NOT NULL,
@@ -84,11 +97,22 @@ GO
 SET IDENTITY_INSERT [dbo].[tbEstado] OFF
 GO
 
+SET IDENTITY_INSERT [dbo].[tbMensaje] ON 
+GO
+INSERT [dbo].[tbMensaje] ([Consecutivo], [Mensaje], [FechaHora], [ConsecutivoUsuario], [ConsecutivoSolicitud]) VALUES (1, N'Hola', CAST(N'2026-08-08T10:30:48.360' AS DateTime), 5, 9)
+GO
+INSERT [dbo].[tbMensaje] ([Consecutivo], [Mensaje], [FechaHora], [ConsecutivoUsuario], [ConsecutivoSolicitud]) VALUES (2, N'??', CAST(N'2026-08-08T10:31:08.623' AS DateTime), 5, 9)
+GO
+INSERT [dbo].[tbMensaje] ([Consecutivo], [Mensaje], [FechaHora], [ConsecutivoUsuario], [ConsecutivoSolicitud]) VALUES (3, N'y mi ticket que?', CAST(N'2026-08-08T10:31:12.587' AS DateTime), 5, 9)
+GO
+SET IDENTITY_INSERT [dbo].[tbMensaje] OFF
+GO
+
 SET IDENTITY_INSERT [dbo].[tbRol] ON 
 GO
 INSERT [dbo].[tbRol] ([Consecutivo], [Nombre]) VALUES (1, N'Usuario')
 GO
-INSERT [dbo].[tbRol] ([Consecutivo], [Nombre]) VALUES (2, N'Administrador')
+INSERT [dbo].[tbRol] ([Consecutivo], [Nombre]) VALUES (2, N'Soporte')
 GO
 SET IDENTITY_INSERT [dbo].[tbRol] OFF
 GO
@@ -110,7 +134,7 @@ INSERT [dbo].[tbUsuario] ([Consecutivo], [Identificacion], [Nombre], [CorreoElec
 GO
 INSERT [dbo].[tbUsuario] ([Consecutivo], [Identificacion], [Nombre], [CorreoElectronico], [Contrasenna], [Estado], [IndicadorTemp], [ConsecutivoRol]) VALUES (5, N'402500603', N'ESTEFAN LEON CORDERO', N'eleon00603@ufide.ac.cr', N'$2a$11$vnpo38WOufW6Ue6t43Fw3u5t3XjAH5kr9TNh.tzZvcUhcNwZIXO5y', 1, 0, 1)
 GO
-INSERT [dbo].[tbUsuario] ([Consecutivo], [Identificacion], [Nombre], [CorreoElectronico], [Contrasenna], [Estado], [IndicadorTemp], [ConsecutivoRol]) VALUES (6, N'402540724', N'JOSE DANIEL RAMIREZ AGUILAR', N'jdaniel.ramlar@gmail.com', N'$2a$11$PxNIisIVIgGQc74IBJv5beOS4O4maJaWSWNUWqQoCVITnamORjSEa', 1, 0, 2)
+INSERT [dbo].[tbUsuario] ([Consecutivo], [Identificacion], [Nombre], [CorreoElectronico], [Contrasenna], [Estado], [IndicadorTemp], [ConsecutivoRol]) VALUES (6, N'402540724', N'JOSE DANIEL RAMIREZ AGUILAR', N'jramirez40724@ufide.ac.cr', N'$2a$11$pcw62Pmq0grq0LJ9Br6ayeYR8LRVdLvbk75h2WxbkMPLN1WoLAPAG', 1, 0, 2)
 GO
 SET IDENTITY_INSERT [dbo].[tbUsuario] OFF
 GO
@@ -125,6 +149,18 @@ ALTER TABLE [dbo].[tbUsuario] ADD  CONSTRAINT [UK_Identificacion] UNIQUE NONCLUS
 (
 	[Identificacion] ASC
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, SORT_IN_TEMPDB = OFF, IGNORE_DUP_KEY = OFF, ONLINE = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
+GO
+
+ALTER TABLE [dbo].[tbMensaje]  WITH CHECK ADD  CONSTRAINT [FK_tbMensaje_tbSolicitud] FOREIGN KEY([ConsecutivoSolicitud])
+REFERENCES [dbo].[tbSolicitud] ([Consecutivo])
+GO
+ALTER TABLE [dbo].[tbMensaje] CHECK CONSTRAINT [FK_tbMensaje_tbSolicitud]
+GO
+
+ALTER TABLE [dbo].[tbMensaje]  WITH CHECK ADD  CONSTRAINT [FK_tbMensaje_tbUsuario] FOREIGN KEY([ConsecutivoUsuario])
+REFERENCES [dbo].[tbUsuario] ([Consecutivo])
+GO
+ALTER TABLE [dbo].[tbMensaje] CHECK CONSTRAINT [FK_tbMensaje_tbUsuario]
 GO
 
 ALTER TABLE [dbo].[tbSolicitud]  WITH CHECK ADD  CONSTRAINT [FK_tbSolicitud_Admin] FOREIGN KEY([ConsecutivoAdmin])
@@ -200,6 +236,25 @@ BEGIN
 END
 GO
 
+CREATE PROCEDURE [dbo].[spConsultarMensajes]
+    @ConsecutivoSolicitud   int
+AS
+BEGIN
+	
+
+    SELECT  M.Consecutivo,
+            M.Mensaje,
+            M.FechaHora,
+            M.ConsecutivoUsuario,
+            U.Nombre 'NombreUsuario'
+      FROM  dbo.tbMensaje M
+      INNER JOIN dbo.tbUsuario U ON U.Consecutivo = M.ConsecutivoUsuario
+      WHERE M.ConsecutivoSolicitud = @ConsecutivoSolicitud
+      ORDER BY M.FechaHora
+
+END
+GO
+
 CREATE PROCEDURE [dbo].[spConsultarSolicitud]
     @ConsecutivoSolicitud  int
 AS
@@ -216,6 +271,40 @@ BEGIN
       INNER JOIN dbo.tbUsuario U ON S.ConsecutivoAdmin = U.Consecutivo
       INNER JOIN dbo.tbEstado E ON S.ConsecutivoEstado = E.Consecutivo
       WHERE S.Consecutivo = @ConsecutivoSolicitud
+
+END
+GO
+
+CREATE PROCEDURE [dbo].[spConsultarSolicitudesAbiertas]
+    @ConsecutivoUsuario  int,
+    @ConsecutivoRol      int
+AS
+BEGIN
+	
+    IF(@ConsecutivoRol = 1)
+    BEGIN
+
+        SELECT  S.Consecutivo,
+                S.Titulo,
+                U.Nombre 'NombreInterlocutor'
+        FROM    dbo.tbSolicitud S
+        INNER   JOIN dbo.tbUsuario U ON S.ConsecutivoAdmin = U.Consecutivo
+        WHERE   S.ConsecutivoUsuario = @ConsecutivoUsuario
+            AND S.ConsecutivoEstado = 1
+
+    END
+    ELSE
+    BEGIN
+
+        SELECT  S.Consecutivo,
+                S.Titulo,
+                U.Nombre 'NombreInterlocutor'
+        FROM    dbo.tbSolicitud S
+        INNER   JOIN dbo.tbUsuario U ON S.ConsecutivoUsuario = U.Consecutivo
+        WHERE   S.ConsecutivoAdmin = @ConsecutivoUsuario
+            AND S.ConsecutivoEstado = 1
+
+    END
 
 END
 GO
@@ -315,6 +404,21 @@ BEGIN
 END
 GO
 
+CREATE PROCEDURE [dbo].[spRegistrarMensaje]
+    @ConsecutivoUsuario     int,
+    @ConsecutivoSolicitud   int,
+    @Mensaje                varchar(max)
+AS
+BEGIN
+	
+    INSERT INTO dbo.tbMensaje (Mensaje,FechaHora,ConsecutivoUsuario,ConsecutivoSolicitud)
+    VALUES (@Mensaje,GETDATE(),@ConsecutivoUsuario,@ConsecutivoSolicitud)
+
+    SELECT SCOPE_IDENTITY() AS 'Consecutivo'
+
+END
+GO
+
 CREATE PROCEDURE [dbo].[spRegistrarSolicitud]
     @Titulo             varchar(150),
     @Descripcion        varchar(max),
@@ -364,6 +468,20 @@ BEGIN
         VALUES (@Identificacion,@Nombre,@CorreoElectronico,@Contrasenna,@Estado,@ClaveTemp,@Rol)
 
     END
+END
+GO
+
+CREATE PROCEDURE [dbo].[spValidarAccesoSolicitud]
+    @ConsecutivoSolicitud  int,
+    @ConsecutivoUsuario    int
+AS
+BEGIN
+	
+    SELECT  COUNT(1)
+    FROM    dbo.tbSolicitud
+    WHERE   Consecutivo = @ConsecutivoSolicitud
+        AND (ConsecutivoUsuario = @ConsecutivoUsuario OR ConsecutivoAdmin = @ConsecutivoUsuario)
+
 END
 GO
 
