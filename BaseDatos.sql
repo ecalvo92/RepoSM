@@ -32,7 +32,7 @@ GO
 
 CREATE TABLE [dbo].[tbMensaje](
 	[Consecutivo] [int] IDENTITY(1,1) NOT NULL,
-	[Mensaje] [varchar](max) NOT NULL,
+	[Mensaje] [nvarchar](max) NOT NULL,
 	[FechaHora] [datetime] NOT NULL,
 	[ConsecutivoUsuario] [int] NOT NULL,
 	[ConsecutivoSolicitud] [int] NOT NULL,
@@ -105,6 +105,16 @@ INSERT [dbo].[tbMensaje] ([Consecutivo], [Mensaje], [FechaHora], [ConsecutivoUsu
 GO
 INSERT [dbo].[tbMensaje] ([Consecutivo], [Mensaje], [FechaHora], [ConsecutivoUsuario], [ConsecutivoSolicitud]) VALUES (3, N'y mi ticket que?', CAST(N'2026-08-08T10:31:12.587' AS DateTime), 5, 9)
 GO
+INSERT [dbo].[tbMensaje] ([Consecutivo], [Mensaje], [FechaHora], [ConsecutivoUsuario], [ConsecutivoSolicitud]) VALUES (4, N'Hola', CAST(N'2026-08-23T09:49:27.530' AS DateTime), 4, 10)
+GO
+INSERT [dbo].[tbMensaje] ([Consecutivo], [Mensaje], [FechaHora], [ConsecutivoUsuario], [ConsecutivoSolicitud]) VALUES (5, N'Hola', CAST(N'2026-08-23T09:50:49.350' AS DateTime), 4, 10)
+GO
+INSERT [dbo].[tbMensaje] ([Consecutivo], [Mensaje], [FechaHora], [ConsecutivoUsuario], [ConsecutivoSolicitud]) VALUES (6, N'Hola', CAST(N'2026-08-23T09:53:25.833' AS DateTime), 4, 10)
+GO
+INSERT [dbo].[tbMensaje] ([Consecutivo], [Mensaje], [FechaHora], [ConsecutivoUsuario], [ConsecutivoSolicitud]) VALUES (7, N'??', CAST(N'2026-08-23T09:53:34.097' AS DateTime), 4, 10)
+GO
+INSERT [dbo].[tbMensaje] ([Consecutivo], [Mensaje], [FechaHora], [ConsecutivoUsuario], [ConsecutivoSolicitud]) VALUES (8, N'tonto mensaje', CAST(N'2026-08-23T10:08:21.747' AS DateTime), 4, 10)
+GO
 SET IDENTITY_INSERT [dbo].[tbMensaje] OFF
 GO
 
@@ -123,7 +133,7 @@ INSERT [dbo].[tbSolicitud] ([Consecutivo], [Titulo], [Descripcion], [FechaRegist
 GO
 INSERT [dbo].[tbSolicitud] ([Consecutivo], [Titulo], [Descripcion], [FechaRegistro], [FechaFinalizacion], [ConsecutivoUsuario], [ConsecutivoAdmin], [ConsecutivoEstado], [Solucion]) VALUES (9, N'Error SQL por bloqueo en actualización de registros críticos', N'Error SQL por bloqueo en actualización de registros críticosError SQL por bloqueo en actualización de registros críticosError SQL por bloqueo en actualización de registros críticosError SQL por bloqueo en actualización de registros críticos', CAST(N'2026-08-01T10:44:14.773' AS DateTime), NULL, 5, 6, 1, NULL)
 GO
-INSERT [dbo].[tbSolicitud] ([Consecutivo], [Titulo], [Descripcion], [FechaRegistro], [FechaFinalizacion], [ConsecutivoUsuario], [ConsecutivoAdmin], [ConsecutivoEstado], [Solucion]) VALUES (10, N'Error SQL por bloqueo en actualización de registros críticos', N'Error SQL por bloqueo en actualización de registros críticosError SQL por bloqueo en actualización de registros críticosError SQL por bloqueo en actualización de registros críticosError SQL por bloqueo en actualización de registros críticos', CAST(N'2026-08-01T10:44:45.277' AS DateTime), NULL, 5, 4, 1, NULL)
+INSERT [dbo].[tbSolicitud] ([Consecutivo], [Titulo], [Descripcion], [FechaRegistro], [FechaFinalizacion], [ConsecutivoUsuario], [ConsecutivoAdmin], [ConsecutivoEstado], [Solucion]) VALUES (10, N'Error SQL por bloqueo en actualización de registros críticos', N'Error SQL por bloqueo en actualización de registros críticosError SQL por bloqueo en actualización de registros críticosError SQL por bloqueo en actualización de registros críticosError SQL por bloqueo en actualización de registros críticos', CAST(N'2026-08-01T10:44:45.277' AS DateTime), CAST(N'2026-08-23T10:12:37.620' AS DateTime), 5, 4, 2, N'Se ajustó')
 GO
 SET IDENTITY_INSERT [dbo].[tbSolicitud] OFF
 GO
@@ -215,6 +225,24 @@ BEGIN
             Nombre              = @Nombre,
             CorreoElectronico   = @CorreoElectronico
     WHERE   Consecutivo = @Consecutivo
+
+END
+GO
+
+CREATE PROCEDURE [dbo].[spAtenderSolicitud]
+    @ConsecutivoSolicitud  int,
+    @ConsecutivoAdmin      int,
+    @Solucion              varchar(max)
+AS
+BEGIN
+
+    UPDATE  dbo.tbSolicitud
+       SET  ConsecutivoEstado   = 2,
+            FechaFinalizacion   = GETDATE(),
+            Solucion            = @Solucion
+     WHERE  Consecutivo         = @ConsecutivoSolicitud
+        AND ConsecutivoAdmin    = @ConsecutivoAdmin
+        AND ConsecutivoEstado   = 1
 
 END
 GO
@@ -390,6 +418,22 @@ BEGIN
 END
 GO
 
+CREATE PROCEDURE [dbo].[spObtenerInterlocutorSolicitud]
+	@ConsecutivoSolicitud int,
+	@ConsecutivoUsuario int
+AS
+BEGIN
+	
+	SELECT	CASE WHEN ConsecutivoUsuario = @ConsecutivoUsuario
+				 THEN ConsecutivoAdmin
+				 ELSE ConsecutivoUsuario
+			END
+	FROM	dbo.tbSolicitud
+	WHERE	Consecutivo = @ConsecutivoSolicitud
+
+END
+GO
+
 CREATE PROCEDURE [dbo].[spRegistrarError]
     @Mensaje            varchar(max),
     @Lugar              varchar(50),
@@ -407,7 +451,7 @@ GO
 CREATE PROCEDURE [dbo].[spRegistrarMensaje]
     @ConsecutivoUsuario     int,
     @ConsecutivoSolicitud   int,
-    @Mensaje                varchar(max)
+    @Mensaje                nvarchar(max)
 AS
 BEGIN
 	
