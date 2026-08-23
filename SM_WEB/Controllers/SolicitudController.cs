@@ -93,12 +93,6 @@ namespace SM_WEB.Controllers
             return Json(response.Content.ReadAsStringAsync().Result);
         }
 
-        [HttpGet]
-        public IActionResult VerEstadoSolicitud()
-        {
-            return View();
-        }
-
         private static void GuardarPDF(IFormFile Imagen, int ConsecutivoSolicitud, string carpeta)
         {
             Directory.CreateDirectory(carpeta);
