@@ -2,6 +2,7 @@
 using SM_WEB.Filters;
 using SM_WEB.Models;
 using System.Net;
+using System.Net.Http.Headers;
 
 namespace SM_WEB.Controllers
 {
@@ -89,6 +90,18 @@ namespace SM_WEB.Controllers
             client.DefaultRequestHeaders.Add("Authorization", "Bearer " + HttpContext.Session.GetString("Token"));
             var urlApi = _config["Valores:UrlApi"] + "Solicitud/CancelarSolicitudAPI?consecutivoSolicitud=" + consecutivoSolicitud;
             var response = client.DeleteAsync(urlApi).Result;
+
+            return Json(response.Content.ReadAsStringAsync().Result);
+        }
+
+        [HttpPost]
+        public IActionResult AtenderSolicitud(int consecutivo, string solucion)
+        {
+            using var client = _http.CreateClient();
+
+            client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", HttpContext.Session.GetString("Token"));
+            var url = _config["Valores:UrlApi"] + "Solicitud/AtenderSolicitudAPI";
+            var response = client.PutAsJsonAsync(url, new { ConsecutivoSolicitud = consecutivo, Solucion = solucion }).Result;
 
             return Json(response.Content.ReadAsStringAsync().Result);
         }
