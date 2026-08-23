@@ -10,6 +10,7 @@ builder.Services.AddControllers();
 builder.Services.AddOpenApi();
 builder.Services.AddHttpContextAccessor();
 builder.Services.AddScoped<IUtilesService, UtilesService>();
+builder.Services.AddHttpClient<IModerationService, ModerationService>();
 builder.Services.AddSignalR();
 
 builder.Services.AddCors(options =>
